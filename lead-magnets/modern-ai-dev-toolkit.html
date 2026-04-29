@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Modern AI Dev Toolkit — Stack Levels</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: rgba(255,255,255,0.035);
+    --surface-hover: rgba(255,255,255,0.055);
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(75,142,241,0.3);
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.62);
+    --text-muted: rgba(240,238,232,0.38);
+    --accent-blue: #4B8EF1;
+    --accent-orange: #E8824A;
+    --green: #3ecf8e;
+    --red: rgba(232,82,74,0.85);
+    --yellow: #f5c842;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Lora', serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--body);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(75,142,241,0.065) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    padding: 48px 24px 48px 32px;
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-brand {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-title {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  .nav-list a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    transition: background 0.15s, color 0.15s;
+    border: 1px solid transparent;
+  }
+
+  .nav-list a:hover,
+  .nav-list a.active {
+    background: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+
+  .nav-list a.active {
+    color: var(--accent-blue);
+    border-color: var(--border-accent);
+  }
+
+  .nav-num {
+    font-size: 0.58rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 5px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .sidebar-footer a {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--accent-blue);
+    text-decoration: none;
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .sidebar-footer a:hover { text-decoration: underline; }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    padding: 48px 48px 80px 48px;
+    max-width: 760px;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-brand {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .page-title {
+    font-family: var(--display);
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .page-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 560px;
+    margin-bottom: 24px;
+  }
+
+  .page-subtitle strong { color: var(--text-primary); font-weight: 500; }
+
+  .meta-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .meta-tag span { color: var(--text-secondary); }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 64px;
+    scroll-margin-top: 32px;
+  }
+
+  .section-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-lead {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 28px;
+    max-width: 580px;
+    font-style: italic;
+  }
+
+  /* ── TOOL CARD ── */
+  .tool-grid {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .tool-card.open {
+    border-color: var(--border-accent);
+  }
+
+  .tool-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .tool-header:hover {
+    background: var(--surface-hover);
+  }
+
+  .tool-card.open .tool-header {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tool-name {
+    font-family: var(--display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+  }
+
+  .tool-badge {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .badge-use { background: rgba(75,142,241,0.12); color: var(--accent-blue); border: 1px solid rgba(75,142,241,0.2); }
+  .badge-alt { background: rgba(240,238,232,0.06); color: var(--text-muted); border: 1px solid var(--border); }
+  .badge-avoid { background: rgba(232,82,74,0.08); color: var(--red); border: 1px solid rgba(232,82,74,0.18); }
+  .badge-free { background: rgba(62,207,142,0.08); color: var(--green); border: 1px solid rgba(62,207,142,0.18); }
+  .badge-paid { background: rgba(245,200,66,0.08); color: var(--yellow); border: 1px solid rgba(245,200,66,0.18); }
+
+  .tool-chevron {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.22s ease;
+  }
+
+  .tool-chevron svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tool-card.open .tool-chevron {
+    transform: rotate(180deg);
+  }
+
+  .tool-body {
+    display: none;
+    padding: 14px 18px 16px;
+  }
+
+  .tool-card.open .tool-body {
+    display: block;
+  }
+
+  .tool-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .tool-why {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent-blue);
+    line-height: 1.55;
+    padding: 8px 12px;
+    background: rgba(75,142,241,0.05);
+    border-left: 2px solid rgba(75,142,241,0.3);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .tool-why::before {
+    content: 'Why I use this → ';
+    font-weight: 500;
+  }
+
+  /* ── STAGE CARDS (Section 2) ── */
+  .stage-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  .stage-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .stage-card.open {
+    border-color: var(--border-accent);
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--surface);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .stage-header:hover {
+    background: var(--surface-hover);
+  }
+
+  .stage-card.open .stage-header {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stage-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+  }
+
+  .stage-name {
+    font-family: var(--display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+  }
+
+  .stage-goal {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .stage-chevron {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.22s ease;
+  }
+
+  .stage-chevron svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .stage-card.open .stage-chevron {
+    transform: rotate(180deg);
+  }
+
+  .stage-body {
+    padding: 14px 18px;
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .stage-card.open .stage-body {
+    display: grid;
+  }
+
+  .stage-col-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .stage-col p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .stage-mistake {
+    grid-column: 1 / -1;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--red);
+    line-height: 1.5;
+    padding: 8px 12px;
+    background: rgba(232,82,74,0.05);
+    border-left: 2px solid rgba(232,82,74,0.25);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .stage-mistake::before { content: 'Common mistake → '; font-weight: 500; }
+
+  /* ── AI USAGE TABLE (Section 3) ── */
+  .ai-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    margin-bottom: 24px;
+  }
+
+  .ai-table th {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .ai-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .ai-table tr:last-child td { border-bottom: none; }
+  .ai-table tr:hover td { background: var(--surface); }
+
+  .ai-table td:first-child {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  /* ── CALLOUT BOX ── */
+  .callout {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .callout-blue {
+    background: rgba(75,142,241,0.06);
+    border: 1px solid rgba(75,142,241,0.18);
+    color: rgba(75,142,241,0.9);
+  }
+
+  .callout-orange {
+    background: rgba(232,130,74,0.06);
+    border: 1px solid rgba(232,130,74,0.18);
+    color: rgba(232,130,74,0.85);
+  }
+
+  .callout-green {
+    background: rgba(62,207,142,0.06);
+    border: 1px solid rgba(62,207,142,0.18);
+    color: rgba(62,207,142,0.85);
+  }
+
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  /* ── ECONOMICS TABLE (Section 4) ── */
+  .econ-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .econ-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+
+  .econ-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .econ-value {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .econ-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── SHIPPING CHECKLIST (Section 5) ── */
+  .ship-grid {
+    display: grid;
+    gap: 8px;
+  }
+
+  .ship-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .ship-item:hover { border-color: var(--border-accent); }
+
+  .ship-check {
+    width: 17px;
+    height: 17px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .ship-check.checked {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+  }
+
+  .ship-check.checked::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 4px;
+    width: 5px; height: 8px;
+    border: 2px solid #fff;
+    border-top: none; border-left: none;
+    transform: rotate(45deg);
+  }
+
+  .ship-text {
+    flex: 1;
+  }
+
+  .ship-title {
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-bottom: 2px;
+    font-family: var(--display);
+  }
+
+  .ship-note {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .ship-category {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Ship score */
+  .ship-score {
+    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+
+  .ship-score-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .ship-score-display {
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .ship-score-track {
+    height: 5px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .ship-score-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-blue);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .ship-verdict {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .ship-verdict strong { color: var(--text-primary); font-weight: 500; }
+
+  /* ── RESOURCES (Section 6) ── */
+  .resource-group {
+    margin-bottom: 28px;
+  }
+
+  .resource-group-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .resource-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  .resource-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .resource-item:hover {
+    border-color: var(--border-accent);
+    background: var(--surface-hover);
+  }
+
+  .resource-name {
+    font-family: var(--display);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-bottom: 2px;
+  }
+
+  .resource-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .resource-tag {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 6px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 0 56px;
+  }
+
+  /* ── PROSE ── */
+  .prose p {
+    font-size: 0.93rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .prose p strong { color: var(--text-primary); font-weight: 500; }
+
+  .prose p:last-child { margin-bottom: 0; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 32px 20px 60px; }
+    .stage-body { grid-template-columns: 1fr; }
+    .econ-grid { grid-template-columns: 1fr; }
+    .stage-mistake { grid-column: 1; }
+  }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 180px 1fr; }
+    .main { padding: 40px 32px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">Stack Levels</div>
+    <div class="sidebar-title">Modern AI Dev Toolkit</div>
+
+    <div class="nav-label">Contents</div>
+    <ul class="nav-list">
+      <li><a href="#section-1" class="active"><span class="nav-num">01</span> The Stack</a></li>
+      <li><a href="#section-2"><span class="nav-num">02</span> Build Process</a></li>
+      <li><a href="#section-3"><span class="nav-num">03</span> AI as a Build Tool</a></li>
+      <li><a href="#section-4"><span class="nav-num">04</span> Solo Dev Economics</a></li>
+      <li><a href="#section-5"><span class="nav-num">05</span> Shipping Checklist</a></li>
+      <li><a href="#section-6"><span class="nav-num">06</span> Resources</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a href="https://nuureva.com">nuureva.com</a>
+      <a href="https://youtube.com/@StackLevels">@StackLevels</a>
+      <a href="https://quriolens.com">quriolens.com</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+      <div class="page-brand">Stack Levels — nuureva.com</div>
+      <h1 class="page-title">The <span style="color:var(--accent-blue)">Modern</span> AI Dev <span style="color:var(--accent-orange)">Toolkit</span></h1>
+      <p class="page-subtitle">
+        <strong>Stack, tools, and process — opinionated.</strong> This is what I actually use to build and ship AI-powered apps as a solo developer with 30 years of experience. Not a list of options. Specific choices with reasons.
+      </p>
+      <div class="meta-row">
+        <div class="meta-tag">VERSION <span>1.0</span></div>
+        <div class="meta-tag">SECTIONS <span>6</span></div>
+        <div class="meta-tag">BY <span>Carl — @StackLevels</span></div>
+      </div>
+    </header>
+
+    <!-- ── SECTION 1: THE STACK ── -->
+    <section class="section" id="section-1">
+      <div class="section-eyebrow">
+        <span class="section-num">01</span>
+        <span class="section-tag">Foundation</span>
+      </div>
+      <h2 class="section-title">The Stack</h2>
+      <p class="section-lead">Every tool here is something I ship real products with. When I say "use this," it's because I've tried the alternatives and made the call. Opinionated by design.</p>
+
+      <div class="tool-grid" id="tool-grid">
+
+        <div class="tool-card open" id="tool-1">
+          <div class="tool-header" onclick="toggleTool('tool-1')">
+            <div class="tool-name">Next.js (App Router)</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">Full-stack React framework. Server components, API routes, file-based routing, and Vercel deployment that just works. The App Router (not Pages) is the right default in 2026 — it handles server/client rendering decisions cleanly and the mental model is sound once you understand it.</p>
+            <div class="tool-why">For a solo dev, the tight Vercel integration alone saves hours per month. No DevOps. No Docker. Push to main and it ships. TypeScript support is first-class. The ecosystem around it — Supabase, Resend, Stripe — all have Next.js examples.</div>
+          </div>
+        </div>
+
+        <div class="tool-card" id="tool-2">
+          <div class="tool-header" onclick="toggleTool('tool-2')">
+            <div class="tool-name">TypeScript</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">Types everywhere, no exceptions. The upfront overhead pays back in 30 minutes on the first refactor. AI-generated code with TypeScript is dramatically easier to review than untyped JavaScript — you can see exactly what shape a function expects and returns.</p>
+            <div class="tool-why">30 years of debugging production systems with no type safety. TypeScript catches 40% of my bugs before they run. With AI generating large chunks of code, the type checker is the second reviewer. Non-negotiable.</div>
+          </div>
+        </div>
+
+        <div class="tool-card" id="tool-3">
+          <div class="tool-header" onclick="toggleTool('tool-3')">
+            <div class="tool-name">Supabase</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">Postgres database, authentication, storage, and edge functions — all in one platform. RLS (Row Level Security) policies built into the database layer. The free tier is genuinely useful in production. Self-hostable when you outgrow the managed service.</p>
+            <div class="tool-why">PlanetScale is MySQL and serverless connections add latency. Firebase is a NoSQL trap that makes reporting hard and migrations painful. Neon is good but Supabase's auth integration alone saves a week of work. Postgres is the right database for 95% of apps — use it.</div>
+          </div>
+        </div>
+
+        <div class="tool-card" id="tool-4">
+          <div class="tool-header" onclick="toggleTool('tool-4')">
+            <div class="tool-name">Vercel</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">Deployment, CDN, edge functions, preview environments on every pull request. The free tier handles real production traffic. Scales without configuration. Next.js and Vercel are built by the same team — the integration is frictionless by design.</p>
+            <div class="tool-why">Railway is cheaper at scale but requires more configuration. Render is fine but slower cold starts. At solo dev stage, the hours you'd spend configuring Railway are worth more than the $20/month difference. Use Vercel until you have a reason to leave.</div>
+          </div>
+        </div>
+
+        <div class="tool-card" id="tool-5">
+          <div class="tool-header" onclick="toggleTool('tool-5')">
+            <div class="tool-name">Claude API (Anthropic)</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">The AI layer for anything requiring reasoning, generation, or analysis inside your product. Claude Sonnet is the right default — it handles complex instructions reliably and the context window is large enough for most product use cases without going to Opus.</p>
+            <div class="tool-why">I've shipped with both OpenAI and Claude. Claude follows complex system prompts more reliably — critical when you're building structured outputs or multi-step workflows. The tool use (function calling) implementation is cleaner. QurioLens runs on Claude API. It works.</div>
+          </div>
+        </div>
+
+        <div class="tool-card" id="tool-6">
+          <div class="tool-header" onclick="toggleTool('tool-6')">
+            <div class="tool-name">Stripe</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">Payments, subscriptions, and webhooks. The only serious option for a product charging real money. The dashboard, the test mode, the webhook CLI, the documentation — all first-class. The 2.9% + 30¢ fee is worth paying for everything you don't have to build.</p>
+            <div class="tool-why">I've seen developers try to save 0.5% by using LemonSqueezy or Paddle. The integration friction is real and the features you lose matter at early stage. Use Stripe until you're doing enough volume that the fee difference is significant. You won't be for a while.</div>
+          </div>
+        </div>
+
+        <div class="tool-card" id="tool-7">
+          <div class="tool-header" onclick="toggleTool('tool-7')">
+            <div class="tool-name">Resend</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">Transactional email — welcome emails, receipts, password resets, anything triggered by an API call. Clean SDK, React Email support for building HTML emails in JSX, excellent deliverability, and a free tier that handles real usage.</p>
+            <div class="tool-why">SendGrid is overkill and the UX is from 2014. Postmark is good but more expensive. Resend was built for developers and it shows — the API is clean, the documentation is honest, and React Email makes building HTML emails not terrible.</div>
+          </div>
+        </div>
+
+        <div class="tool-card" id="tool-8">
+          <div class="tool-header" onclick="toggleTool('tool-8')">
+            <div class="tool-name">Tailwind CSS + CSS Modules</div>
+            <span class="tool-badge badge-use">Use</span>
+            <div class="tool-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="tool-body">
+            <p class="tool-desc">Tailwind for structural utilities (layout, spacing, flex, grid). CSS Modules for anything that defines visual identity — custom gradients, animations, branded colors, hover effects. The hybrid keeps scaffolding fast and keeps the site from looking like a Tailwind template.</p>
+            <div class="tool-why">Pure Tailwind produces readable layout code but ugly, template-feeling sites. Pure CSS Modules is slow for scaffolding. The split — Tailwind for structure, CSS Modules for identity — is the right tradeoff for a product that needs to look distinct, not generic.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="callout callout-orange">
+        <div class="callout-label">On switching costs</div>
+        The instinct to evaluate every tool before committing is how developers spend six weeks on stack selection and zero weeks shipping. Pick this stack, learn it deeply, and ship. Migrate when a tool genuinely fails you — not because you read that something else is technically superior.
+      </div>
+
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── SECTION 2: BUILD PROCESS ── -->
+    <section class="section" id="section-2">
+      <div class="section-eyebrow">
+        <span class="section-num">02</span>
+        <span class="section-tag">Workflow</span>
+      </div>
+      <h2 class="section-title">The Build Process</h2>
+      <p class="section-lead">Five stages from idea to revenue. The mistake most solo developers make is treating this as a linear checklist. It isn't — but each stage has a clear goal and a clear failure mode.</p>
+
+      <div class="stage-list" id="stage-list">
+
+        <div class="stage-card open" id="stage-1">
+          <div class="stage-header" onclick="toggleStage('stage-1')">
+            <span class="stage-num">Stage 1</span>
+            <span class="stage-name">Ideate</span>
+            <span class="stage-goal">Goal: find a problem worth solving</span>
+            <div class="stage-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="stage-body">
+            <div class="stage-col">
+              <div class="stage-col-label">What to do</div>
+              <p>Look for problems you've personally experienced or directly observed. Read 1-star reviews of tools in your domain. Spend time in communities where your target user complains publicly. Write down the problem in one sentence from the user's perspective — not yours.</p>
+            </div>
+            <div class="stage-col">
+              <div class="stage-col-label">Tools that help</div>
+              <p>Reddit (r/SideProject, r/SaaS, niche subreddits), Product Hunt reviews, App Store reviews, YouTube comments on competitors, direct conversations with 3–5 potential users.</p>
+            </div>
+            <div class="stage-mistake">You're building something because the technology is interesting, not because real people have a real problem. Technology-first products rarely find customers.</div>
+          </div>
+        </div>
+
+        <div class="stage-card" id="stage-2">
+          <div class="stage-header" onclick="toggleStage('stage-2')">
+            <span class="stage-num">Stage 2</span>
+            <span class="stage-name">Validate</span>
+            <span class="stage-goal">Goal: prove demand before writing code</span>
+            <div class="stage-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="stage-body">
+            <div class="stage-col">
+              <div class="stage-col-label">What to do</div>
+              <p>Answer 28 questions about the problem, the buyer, the competition, and your distribution path. Run the process manually for 3–5 people before building anything. Confirm that someone will pay before building the thing they'd pay for.</p>
+            </div>
+            <div class="stage-col">
+              <div class="stage-col-label">Tools that help</div>
+              <p>The Idea Validation Checklist (companion to this guide). A landing page with a waitlist. A Google Form that does the manual version of what you're about to automate. Direct outreach — not a survey, a conversation.</p>
+            </div>
+            <div class="stage-mistake">Skipping validation because you're "pretty sure" people will pay. The confidence of a developer who has never sold anything is a liability, not an asset.</div>
+          </div>
+        </div>
+
+        <div class="stage-card" id="stage-3">
+          <div class="stage-header" onclick="toggleStage('stage-3')">
+            <span class="stage-num">Stage 3</span>
+            <span class="stage-name">Build</span>
+            <span class="stage-goal">Goal: ship the smallest version that proves the core assumption</span>
+            <div class="stage-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="stage-body">
+            <div class="stage-col">
+              <div class="stage-col-label">What to do</div>
+              <p>Define the MVP as one paragraph — what it does, what it doesn't do, and what assumption it tests. Build only that. Use Cursor for implementation with the stack above. Every feature that isn't in the one paragraph gets cut until after launch.</p>
+            </div>
+            <div class="stage-col">
+              <div class="stage-col-label">Tools that help</div>
+              <p>Cursor (AI code editor — see Section 3). The full stack from Section 1. Framer Motion for UI polish that matters. React Hook Form for any user input. Radix UI for accessible interactive patterns.</p>
+            </div>
+            <div class="stage-mistake">Adding features because they're easy to build. Easy-to-build features that nobody asked for are the primary cause of delayed launches and abandoned projects.</div>
+          </div>
+        </div>
+
+        <div class="stage-card" id="stage-4">
+          <div class="stage-header" onclick="toggleStage('stage-4')">
+            <span class="stage-num">Stage 4</span>
+            <span class="stage-name">Ship</span>
+            <span class="stage-goal">Goal: get real users on the thing</span>
+            <div class="stage-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="stage-body">
+            <div class="stage-col">
+              <div class="stage-col-label">What to do</div>
+              <p>Run the shipping checklist in Section 5 before calling it live. Deploy to Vercel. Set up the Stripe webhook. Confirm the Resend emails fire. Set your success metric (number of paying users in 30 days). Then tell people directly — communities, DMs, the channel.</p>
+            </div>
+            <div class="stage-col">
+              <div class="stage-col-label">Tools that help</div>
+              <p>Vercel deploy previews. Stripe test mode. Supabase logs. Resend dashboard. PostHog or Plausible for analytics — lightweight, privacy-respecting, enough signal at early stage.</p>
+            </div>
+            <div class="stage-mistake">Waiting until it's perfect. It won't be perfect after launch either. Ship when it solves the problem — not when every edge case is handled.</div>
+          </div>
+        </div>
+
+        <div class="stage-card" id="stage-5">
+          <div class="stage-header" onclick="toggleStage('stage-5')">
+            <span class="stage-num">Stage 5</span>
+            <span class="stage-name">Get Customers</span>
+            <span class="stage-goal">Goal: acquire the first 10 paying users</span>
+            <div class="stage-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
+          </div>
+          <div class="stage-body">
+            <div class="stage-col">
+              <div class="stage-col-label">What to do</div>
+              <p>The first 10 customers come from direct outreach — not SEO, not ads, not Product Hunt. Find the 10 people who have the problem you solved and tell them it exists. YouTube and content distribution come after proof-of-concept, not before.</p>
+            </div>
+            <div class="stage-col">
+              <div class="stage-col-label">Tools that help</div>
+              <p>The communities you identified in Stage 1. Your existing email list (this is why you build it before the product). Your YouTube channel if it has traction. LinkedIn for B2B. Direct DMs to people who've publicly described the problem.</p>
+            </div>
+            <div class="stage-mistake">Spending Stage 5 energy on building new features instead of finding users. The product is already built. The only job now is distribution.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── SECTION 3: AI AS A BUILD TOOL ── -->
+    <section class="section" id="section-3">
+      <div class="section-eyebrow">
+        <span class="section-num">03</span>
+        <span class="section-tag">Leverage</span>
+      </div>
+      <h2 class="section-title">AI as a Build Tool</h2>
+      <p class="section-lead">Not as a toy. Not as a replacement. As a force multiplier for a developer who already knows what they're doing. The gap between "I tried AI" and "I build with AI professionally" is enormous — here's what's actually in that gap.</p>
+
+      <table class="ai-table">
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Use it for</th>
+            <th>Don't use it for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cursor</td>
+            <td>Active development — writing components, refactoring, adding features to an existing codebase. Best when the codebase context is loaded and Cursor understands your patterns.</td>
+            <td>Greenfield architecture decisions. Let Claude think through the structure first, then build in Cursor.</td>
+          </tr>
+          <tr>
+            <td>Claude (chat)</td>
+            <td>Architecture decisions, debugging strange errors, reviewing generated code for logic problems, designing database schemas, planning API structures before writing them.</td>
+            <td>Boilerplate code generation in an active project — Cursor does this better with full file context.</td>
+          </tr>
+          <tr>
+            <td>Claude API</td>
+            <td>The AI layer inside your product — generation, analysis, classification, extraction. Any user-facing AI feature that needs to be reliable, structured, and configurable.</td>
+            <td>Simple text matching or lookups that don't need reasoning. An API call costs money every time — don't use it where a regex would do.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="prose">
+        <p><strong>How I structure a Cursor session for full-stack work:</strong> CLAUDE.md in the project root is the single context document — it tells Cursor the stack, the file structure, the naming conventions, and the rules. Every Cursor prompt starts with "Read CLAUDE.md before starting." Without that anchor, Cursor makes assumptions that drift from your actual codebase within three sessions.</p>
+
+        <p><strong>AI for generation vs AI for review:</strong> Generation is fast and usually good enough for boilerplate. Review is where the real value is. When Cursor generates a 200-line component, the useful question is not "does this work?" — it's "is there a logic error in the state management?" and "are the RLS policies this relies on actually set up?" That question requires a developer who understands the system. AI can help find the answer. It can't ask the question on its own.</p>
+
+        <p><strong>What AI is genuinely bad at:</strong> Cross-file consistency. If you refactor a type in one file, Cursor will not automatically know that three other files depend on that type in a way that now breaks. TypeScript catches some of this. Code review catches the rest. AI doesn't. This is the senior developer advantage — pattern recognition across a whole system that AI still lacks.</p>
+      </div>
+
+      <div class="callout callout-blue">
+        <div class="callout-label">The real multiplier</div>
+        A developer with 5 years of experience using AI builds faster than they did without it. A developer with 30 years of experience using AI builds faster than a team of 5 without it. The multiplier scales with experience because experience is what AI doesn't have — knowing what to build, what to cut, and what will break in production.
+      </div>
+
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── SECTION 4: SOLO DEV ECONOMICS ── -->
+    <section class="section" id="section-4">
+      <div class="section-eyebrow">
+        <span class="section-num">04</span>
+        <span class="section-tag">Business</span>
+      </div>
+      <h2 class="section-title">Solo Dev Economics</h2>
+      <p class="section-lead">AI changes the unit economics of software development in ways that most developers haven't fully internalized yet. Here's what actually shifts when one person can build what used to take a team.</p>
+
+      <div class="econ-grid">
+        <div class="econ-card">
+          <div class="econ-label">Time to MVP</div>
+          <div class="econ-value">2–6 weeks</div>
+          <div class="econ-desc">With the stack above and Cursor, a focused solo developer can ship a working SaaS MVP in 2–6 weeks. Three years ago this was 3–6 months minimum.</div>
+        </div>
+        <div class="econ-card">
+          <div class="econ-label">Infrastructure cost at launch</div>
+          <div class="econ-value">~$0–20/mo</div>
+          <div class="econ-desc">Vercel free tier, Supabase free tier, Resend free tier, Sender.net free tier. You can run a real product in production for near zero until you have paying users.</div>
+        </div>
+        <div class="econ-card">
+          <div class="econ-label">Break-even subscriber count</div>
+          <div class="econ-value">5–15 users</div>
+          <div class="econ-desc">At $20–49/month, covering your infrastructure and AI API costs requires fewer than 15 subscribers. The margin economics of solo SaaS are unlike anything that existed before.</div>
+        </div>
+        <div class="econ-card">
+          <div class="econ-label">The dangerous assumption</div>
+          <div class="econ-value">Build = Revenue</div>
+          <div class="econ-desc">AI makes building easier but does nothing for distribution. The bottleneck has shifted entirely to customer acquisition. Build less. Ship sooner. Spend more time on distribution than on features.</div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p><strong>When to build vs buy vs skip:</strong> Build when it's core to your product — the thing that makes it different. Buy when it's infrastructure — payments, auth, email. Skip when it's a nice-to-have — anything a user didn't specifically ask for doesn't exist yet.</p>
+
+        <p><strong>Scope discipline is the hardest skill:</strong> AI makes adding features trivially easy. That's the danger. Every feature you add is a feature you have to maintain, explain, and support. A product with 3 features done well converts better than a product with 15 features done adequately. The AI-assisted developer's biggest risk isn't moving too slow — it's building too much of the wrong thing.</p>
+
+        <p><strong>Pricing at solo dev scale:</strong> Charge more than you think is reasonable. The value of saving a user 2 hours per week is not $7/month — it's $40. Developers chronically underprice because they're thinking about their time to build, not the user's time saved. Price on value delivered, not on effort invested.</p>
+      </div>
+
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── SECTION 5: SHIPPING CHECKLIST ── -->
+    <section class="section" id="section-5">
+      <div class="section-eyebrow">
+        <span class="section-num">05</span>
+        <span class="section-tag">Pre-launch</span>
+      </div>
+      <h2 class="section-title">Shipping Checklist</h2>
+      <p class="section-lead">Twenty things to verify before you call something live. Every item on this list is something I've shipped without at least once. Learn from that.</p>
+
+      <div class="ship-grid" id="ship-list">
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Error states on every form</div>
+            <div class="ship-note">Empty submission, invalid email, network failure, 5xx — all handled with real user-facing messages. Not console.log.</div>
+          </div>
+          <span class="ship-category">UX</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Loading states on every async action</div>
+            <div class="ship-note">Button shows "Saving..." and disables during submission. Users click twice when nothing happens. Prevent it.</div>
+          </div>
+          <span class="ship-category">UX</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Mobile layout at 390px</div>
+            <div class="ship-note">Test on an actual phone, not just browser dev tools. Text readable, buttons tappable, no horizontal scroll.</div>
+          </div>
+          <span class="ship-category">Mobile</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Supabase RLS policies active</div>
+            <div class="ship-note">Every table has row-level security enabled. Users can only read and write their own data. Test this with a second account before launch.</div>
+          </div>
+          <span class="ship-category">Security</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Environment variables in Vercel</div>
+            <div class="ship-note">SUPABASE_URL, SUPABASE_ANON_KEY, RESEND_API_KEY, STRIPE_SECRET_KEY, ANTHROPIC_API_KEY — all set in Vercel production environment, not just local .env.</div>
+          </div>
+          <span class="ship-category">Config</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Stripe webhook registered and verified</div>
+            <div class="ship-note">The webhook endpoint is registered in Stripe dashboard pointing to your production URL. Signature verification is on. Test with Stripe CLI before launch.</div>
+          </div>
+          <span class="ship-category">Payments</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Transactional emails sending correctly</div>
+            <div class="ship-note">Welcome email, receipt email, any triggered email — send a real test to a real inbox. Check spam folder. Check that first_name personalization is populated.</div>
+          </div>
+          <span class="ship-category">Email</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">404 and error pages exist</div>
+            <div class="ship-note">not-found.tsx, error.tsx, and global-error.tsx — all present, branded, and linking back to the homepage. Users hit these. Don't leave them stranded.</div>
+          </div>
+          <span class="ship-category">UX</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Console errors: zero</div>
+            <div class="ship-note">Open DevTools on every page before launch. Zero errors, zero unhandled promise rejections. A console error in production is a bug you haven't fixed yet.</div>
+          </div>
+          <span class="ship-category">Code</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Claude API error handling</div>
+            <div class="ship-note">Rate limit errors, timeout errors, and malformed responses all handled gracefully. The API will fail eventually. The user should never see a raw API error.</div>
+          </div>
+          <span class="ship-category">AI</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Legal pages present: privacy, terms, cookies</div>
+            <div class="ship-note">Required for any product that collects email addresses or processes payments. Linked in the footer. Updated to reflect your actual data practices.</div>
+          </div>
+          <span class="ship-category">Legal</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Analytics installed</div>
+            <div class="ship-note">Plausible or PostHog — something that tells you which pages people visit and where they drop off. You need this data within 24 hours of launch, not two weeks later.</div>
+          </div>
+          <span class="ship-category">Analytics</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Offline behavior tested</div>
+            <div class="ship-note">DevTools → Network → Offline. Submit a form. What happens? The user gets a clear error message, not a blank screen or a spinner that never resolves.</div>
+          </div>
+          <span class="ship-category">UX</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Meta tags: title, description, og:image</div>
+            <div class="ship-note">When someone shares your link on Twitter or LinkedIn, it should show a proper preview. Takes 20 minutes and makes every share look professional.</div>
+          </div>
+          <span class="ship-category">SEO</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Favicon present</div>
+            <div class="ship-note">The default Next.js favicon marks you as someone who didn't finish. 5 minutes to replace it with your actual mark.</div>
+          </div>
+          <span class="ship-category">Brand</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Dark mode and light mode both tested</div>
+            <div class="ship-note">If you support both — and you should — check every page in both modes. Invisible text on dark backgrounds is a common last-minute discovery.</div>
+          </div>
+          <span class="ship-category">UI</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Database backup confirmed</div>
+            <div class="ship-note">Supabase has daily backups on paid plans. On free, export your schema and any seed data before launch. Know where your data lives and how to get it back.</div>
+          </div>
+          <span class="ship-category">Infra</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">API rate limits understood</div>
+            <div class="ship-note">Claude API, Stripe, Resend — all have rate limits. Know what they are before launch. A flood of signups should not break your app.</div>
+          </div>
+          <span class="ship-category">Infra</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">Custom domain pointed at Vercel</div>
+            <div class="ship-note">Not yourapp.vercel.app. Your actual domain. DNS propagation takes up to 48 hours — do this before launch day, not on launch day.</div>
+          </div>
+          <span class="ship-category">Config</span>
+        </div>
+
+        <div class="ship-item" onclick="toggleShip(this)">
+          <div class="ship-check"></div>
+          <div class="ship-text">
+            <div class="ship-title">You've used the product yourself for a week</div>
+            <div class="ship-note">Not a demo session. Real use, from a real account, completing the real flow. If you can't do this — what are you launching?</div>
+          </div>
+          <span class="ship-category">Product</span>
+        </div>
+
+      </div>
+
+      <div class="ship-score">
+        <div class="ship-score-label">Pre-launch score</div>
+        <div class="ship-score-display"><span id="ship-num">0</span> <span style="font-size:1rem;font-weight:400;color:var(--text-muted)">/ 20 items verified</span></div>
+        <div class="ship-score-track"><div class="ship-score-fill" id="ship-bar"></div></div>
+        <div class="ship-verdict" id="ship-verdict">Check off items above to see your launch readiness.</div>
+      </div>
+
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ── SECTION 6: RESOURCES ── -->
+    <section class="section" id="section-6">
+      <div class="section-eyebrow">
+        <span class="section-num">06</span>
+        <span class="section-tag">Reference</span>
+      </div>
+      <h2 class="section-title">Resources</h2>
+      <p class="section-lead">Curated, not comprehensive. Everything here is something I actively use or reference. No filler.</p>
+
+      <div class="resource-group">
+        <div class="resource-group-label">From this toolkit</div>
+        <div class="resource-list">
+          <a class="resource-item" href="https://nuureva.com">
+            <div style="flex:1">
+              <div class="resource-name">Idea Validation Checklist</div>
+              <div class="resource-desc">28 questions to answer before writing a line of code. The companion to this guide — use it at Stage 2 of the build process.</div>
+            </div>
+            <span class="resource-tag">Free</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-label">The Stack</div>
+        <div class="resource-list">
+          <a class="resource-item" href="https://nextjs.org" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Next.js</div>
+              <div class="resource-desc">Framework. Start with the App Router docs — specifically the data fetching and server components sections.</div>
+            </div>
+            <span class="resource-tag">Free / Paid</span>
+          </a>
+          <a class="resource-item" href="https://supabase.com" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Supabase</div>
+              <div class="resource-desc">Database + auth. Read the RLS documentation before you write a single policy — it will save you from a security mistake.</div>
+            </div>
+            <span class="resource-tag">Free tier</span>
+          </a>
+          <a class="resource-item" href="https://vercel.com" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Vercel</div>
+              <div class="resource-desc">Deployment. The free tier handles real production workloads. Pro is worth it when you need more build minutes or team features.</div>
+            </div>
+            <span class="resource-tag">Free tier</span>
+          </a>
+          <a class="resource-item" href="https://resend.com" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Resend + React Email</div>
+              <div class="resource-desc">Transactional email. Use React Email to build templates in JSX — it's the least painful way to write HTML email that has ever existed.</div>
+            </div>
+            <span class="resource-tag">Free tier</span>
+          </a>
+          <a class="resource-item" href="https://stripe.com" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Stripe</div>
+              <div class="resource-desc">Payments. Install the Stripe CLI locally — testing webhooks without it is painful. Read the webhook signature verification docs before launch.</div>
+            </div>
+            <span class="resource-tag">Per transaction</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-label">AI Dev Tools</div>
+        <div class="resource-list">
+          <a class="resource-item" href="https://cursor.com" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Cursor</div>
+              <div class="resource-desc">AI code editor. Set up your CLAUDE.md context file first. Without it, Cursor's suggestions drift from your actual codebase within hours.</div>
+            </div>
+            <span class="resource-tag">Free / Paid</span>
+          </a>
+          <a class="resource-item" href="https://anthropic.com" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Claude API</div>
+              <div class="resource-desc">The AI layer for your product. Start with claude-sonnet-4 for most tasks. Read the tool use documentation — it's the feature that makes complex AI workflows possible.</div>
+            </div>
+            <span class="resource-tag">Pay per token</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-label">Stack Levels — Live Build</div>
+        <div class="resource-list">
+          <a class="resource-item" href="https://youtube.com/@StackLevels" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">Stack Levels YouTube</div>
+              <div class="resource-desc">Every tool in this guide gets used on camera. Real products, real numbers, real process — including what fails. Follow the build.</div>
+            </div>
+            <span class="resource-tag">Free</span>
+          </a>
+          <a class="resource-item" href="https://quriolens.com" target="_blank">
+            <div style="flex:1">
+              <div class="resource-name">QurioLens</div>
+              <div class="resource-desc">The first Nuureva product — built with this exact stack. An AI-powered tool for eBay resellers. Currently in beta. The live case study for everything in this guide.</div>
+            </div>
+            <span class="resource-tag">Beta</span>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="margin-top:48px;padding-top:28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:var(--display);font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;">NUUREVA / Stack Levels</div>
+        <div style="font-family:var(--mono);font-size:0.65rem;color:var(--text-muted);letter-spacing:0.05em;">Built in public — nuureva.com · @StackLevels</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;text-align:right;">
+        <a href="https://nuureva.com" style="font-family:var(--mono);font-size:0.67rem;color:var(--accent-blue);text-decoration:none;letter-spacing:0.04em;">nuureva.com</a>
+        <a href="https://youtube.com/@StackLevels" style="font-family:var(--mono);font-size:0.67rem;color:var(--accent-blue);text-decoration:none;letter-spacing:0.04em;">youtube.com/@StackLevels</a>
+        <a href="https://quriolens.com" style="font-family:var(--mono);font-size:0.67rem;color:var(--accent-blue);text-decoration:none;letter-spacing:0.04em;">quriolens.com</a>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  /* ── Tool card accordion ── */
+  var toolIds = ['tool-1','tool-2','tool-3','tool-4','tool-5','tool-6','tool-7','tool-8'];
+
+  function toggleTool(id) {
+    var clicked = document.getElementById(id);
+    var isOpen = clicked.classList.contains('open');
+    toolIds.forEach(function(tid) {
+      document.getElementById(tid).classList.remove('open');
+    });
+    if (!isOpen) clicked.classList.add('open');
+  }
+
+  /* ── Stage card accordion ── */
+  var stageIds = ['stage-1','stage-2','stage-3','stage-4','stage-5'];
+
+  function toggleStage(id) {
+    var clicked = document.getElementById(id);
+    var isOpen = clicked.classList.contains('open');
+    stageIds.forEach(function(sid) {
+      document.getElementById(sid).classList.remove('open');
+    });
+    if (!isOpen) clicked.classList.add('open');
+  }
+
+  /* ── Shipping checklist ── */
+  function toggleShip(el) {
+    el.querySelector('.ship-check').classList.toggle('checked');
+    updateShipScore();
+  }
+
+  function updateShipScore() {
+    var checked = document.querySelectorAll('#ship-list .ship-check.checked').length;
+    var total = 20;
+    document.getElementById('ship-num').textContent = checked;
+    var pct = Math.round((checked / total) * 100);
+    var bar = document.getElementById('ship-bar');
+    var verdict = document.getElementById('ship-verdict');
+    bar.style.width = pct + '%';
+
+    if (checked === 0) {
+      verdict.innerHTML = 'Check off items above to see your launch readiness.';
+      bar.style.background = 'rgba(255,255,255,0.15)';
+    } else if (checked <= 8) {
+      verdict.innerHTML = '<strong>Not ready.</strong> Several critical items are unchecked. Fix the security and payment items first — those are launch blockers.';
+      bar.style.background = '#E8524A';
+    } else if (checked <= 14) {
+      verdict.innerHTML = '<strong>Getting close.</strong> You\'re past the critical items. Work through the remaining checks — most take less than 20 minutes each.';
+      bar.style.background = '#E8824A';
+    } else if (checked <= 18) {
+      verdict.innerHTML = '<strong>Nearly there.</strong> Finish the remaining items. At this point you\'re in polish territory — don\'t let perfect be the enemy of shipped.';
+      bar.style.background = '#4B8EF1';
+    } else {
+      verdict.innerHTML = '<strong>Ship it.</strong> You\'ve done the work. Every critical system is verified. Launch today — not tomorrow.';
+      bar.style.background = '#3ecf8e';
+    }
+  }
+
+  /* ── Active nav on scroll ── */
+  var sections = document.querySelectorAll('.section[id]');
+  var navLinks = document.querySelectorAll('.nav-list a');
+
+  function updateNav() {
+    var scrollY = window.scrollY + 80;
+    var current = '';
+    sections.forEach(function(s) {
+      if (s.offsetTop <= scrollY) current = s.id;
+    });
+    navLinks.forEach(function(a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+</script>
+
+</body>
+</html>
