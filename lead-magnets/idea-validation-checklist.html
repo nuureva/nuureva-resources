@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Idea Validation Checklist — Stack Levels</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: rgba(255,255,255,0.035);
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(75,142,241,0.35);
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.62);
+    --text-muted: rgba(240,238,232,0.38);
+    --accent-blue: #4B8EF1;
+    --accent-orange: #E8824A;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Lora', serif;
+    --green: #3ecf8e;
+    --red: rgba(232,82,74,0.9);
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--body);
+    line-height: 1.7;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* Background orbs */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(75,142,241,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 32px 80px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 40px;
+  }
+
+  .brand {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    font-family: var(--body);
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 580px;
+  }
+
+  .subtitle strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* Meta row */
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .meta-item span {
+    color: var(--text-secondary);
+  }
+
+  /* How to use box */
+  .how-to-use {
+    background: rgba(75,142,241,0.06);
+    border: 1px solid rgba(75,142,241,0.18);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+  }
+
+  .how-to-use-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent-blue);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .how-to-use p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Section — accordion */
+  .section {
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .section.open {
+    border-color: rgba(75,142,241,0.3);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+    background: var(--surface);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .section-header:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .section.open .section-header {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-number {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .section-title-block {
+    flex: 1;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .section-purpose {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* Section progress badge */
+  .section-progress {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-right: 4px;
+  }
+
+  .section-progress.complete {
+    color: var(--green);
+  }
+
+  /* Chevron */
+  .chevron {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease;
+  }
+
+  .chevron svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .section.open .chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Accordion body */
+  .section-body {
+    padding: 0;
+    display: none;
+  }
+
+  .section.open .section-body {
+    display: block;
+  }
+
+  /* Question item */
+  .question-item {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    gap: 10px;
+  }
+
+  .question-item:last-child {
+    border-bottom: none;
+  }
+
+  .question-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .q-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .q-checkbox.checked {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+  }
+
+  .q-checkbox.checked::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+  }
+
+  .q-text {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  /* Signal rows */
+  .signals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 2px;
+    padding-left: 30px;
+  }
+
+  @media (max-width: 540px) {
+    .signals { grid-template-columns: 1fr; }
+  }
+
+  .signal {
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .signal-label {
+    font-family: var(--mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .signal.good {
+    background: rgba(62,207,142,0.07);
+    border: 1px solid rgba(62,207,142,0.18);
+  }
+
+  .signal.good .signal-label {
+    color: var(--green);
+  }
+
+  .signal.good p {
+    color: rgba(62,207,142,0.8);
+  }
+
+  .signal.bad {
+    background: rgba(232,82,74,0.06);
+    border: 1px solid rgba(232,82,74,0.16);
+  }
+
+  .signal.bad .signal-label {
+    color: var(--red);
+  }
+
+  .signal.bad p {
+    color: rgba(232,82,74,0.75);
+  }
+
+  /* Score bar */
+  .score-section {
+    margin-top: 48px;
+    padding: 28px 28px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .score-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .score-display {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .score-display span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .score-bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    margin: 12px 0 20px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-blue);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .score-verdict {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .score-verdict strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .footer-sub {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: right;
+  }
+
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-blue);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    body::before { display: none; }
+    .q-checkbox { border-color: #999; }
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 40px 20px 60px; }
+    .section-header { padding: 16px 18px; }
+    .question-item { padding: 14px 18px; }
+    .signals { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="brand">Stack Levels — nuureva.com</div>
+    <h1 class="title">The <span style="color:var(--accent-blue)">Idea</span> Validation<br><span style="color:var(--accent-orange)">Checklist</span></h1>
+    <p class="subtitle">
+      <strong>28 questions to answer before you write a line of code.</strong>
+      Most developers build first and validate never. This checklist reverses that — so you only build what's already proven worth building.
+    </p>
+    <div class="meta">
+      <div class="meta-item">VERSION <span>1.0</span></div>
+      <div class="meta-item">SECTIONS <span>7</span></div>
+      <div class="meta-item">QUESTIONS <span>28</span></div>
+      <div class="meta-item">BUILT BY <span>Carl — @StackLevels</span></div>
+    </div>
+  </header>
+
+  <div class="how-to-use">
+    <div class="how-to-use-label">How to use this</div>
+    <p>Work through each section before starting a new project. Check off each question you can answer confidently. Green signals = evidence you're on solid ground. Red signals = a warning worth sitting with. If you're honest, an idea with fewer than 18 checks is worth pausing on. An idea with 22+ is worth building.</p>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section open" id="section-1">
+    <div class="section-header" onclick="toggleSection('section-1')">
+      <div class="section-number">01</div>
+      <div class="section-title-block">
+        <div class="section-title">Problem Clarity</div>
+        <div class="section-purpose">Can you describe the problem precisely from the customer's perspective?</div>
+      </div>
+      <div class="section-progress" id="prog-section-1">0 / 4</div>
+      <div class="chevron"><svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg></div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Can you describe the problem in one sentence — from the customer's point of view, not yours?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>"eBay resellers spend 45 minutes per listing writing titles and descriptions manually."</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>"People need better productivity tools." Too vague to build anything against.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is this a problem someone experiences repeatedly — not just once?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>The problem happens weekly or daily. Recurring pain means recurring willingness to pay.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>It's a one-time event (moving house, planning a wedding). Hard to build subscription revenue on one-time problems.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Do you have personal experience with this problem — or have you directly observed someone who does?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>You've lived this problem or spent real time with people who have. You understand the nuance.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>You read about it in a Reddit thread and thought it sounded interesting. Surface-level problem awareness leads to surface-level solutions.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is the pain acute (it actively costs time, money, or stress) or merely inconvenient?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>People lose money, hours, or sleep because of this problem. Acute pain has budget attached to it.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>It's mildly annoying. People tolerate mildly annoying. They pay to fix acutely painful.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="section-2">
+    <div class="section-header" onclick="toggleSection('section-2')">
+      <div class="section-number">02</div>
+      <div class="section-title-block">
+        <div class="section-title">Evidence of Demand</div>
+        <div class="section-purpose">Where are people already complaining about this — before you exist?</div>
+      </div>
+      <div class="section-progress" id="prog-section-2">0 / 4</div>
+      <div class="chevron"><svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg></div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Can you find at least 5 real people publicly complaining about this problem — on Reddit, forums, reviews, or community groups?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>Specific threads, posts, reviews you can link to. Unprompted public complaints are the purest demand signal.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>You searched and found nothing. Either the problem doesn't exist or the audience isn't vocal online — both are hard starting points.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Are people currently paying for an imperfect solution — a workaround, a freelancer, or a tool that does 60% of the job?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>Existing payment behavior proves the problem is real and there's already a budget. You're competing for existing spend, not creating a new category.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>Nobody is paying anything for any version of this solution. Either the problem isn't painful enough or you've discovered a gap nobody wants to fill.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Have you talked directly to at least 3 people who have this problem — not to pitch, but to listen?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>Real conversations revealed something you didn't expect. The best validation sessions change your assumptions.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>Everyone you talked to is a friend or family member. Social proximity makes honest feedback almost impossible.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is there a measurable, specific outcome people want — not just a vague desire to "be more productive"?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>"Save 2 hours per week on listing creation." Specific outcomes give you a marketing hook and a product target simultaneously.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>"Help people do things better." You can't build a product against a vague aspiration.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="section-3">
+    <div class="section-header" onclick="toggleSection('section-3')">
+      <div class="section-number">03</div>
+      <div class="section-title-block">
+        <div class="section-title">Who Pays</div>
+        <div class="section-purpose">Is there a specific person with a budget and a reason to pay now?</div>
+      </div>
+      <div class="section-progress" id="prog-section-3">0 / 4</div>
+      <div class="chevron"><svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg></div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Can you describe your buyer in one sentence — job title, situation, and what they're trying to accomplish?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>"Part-time eBay resellers selling 20–50 items/month who want to scale without hiring."</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>"Anyone who sells things online." Trying to serve everyone means you'll resonate with no one.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Does this person already spend money on tools or services related to this problem?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>They have a Canva subscription, a Notion workspace, a VA they pay $200/month. Budget exists. You're asking them to reallocate it.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>They use only free tools and expect everything to be free. Building for this buyer means competing on zero.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is there a triggering event that makes someone ready to pay — a specific moment when the pain becomes acute enough to act?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>"Just listed their 100th item manually and realized they're burning their entire margin on time." Triggering events are your marketing moments.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>There's no specific moment. The pain is ambient and chronic but never forces a decision.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Would your buyer pay monthly or is this a one-time purchase? And is that consistent with how they currently buy tools?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>They already pay monthly for 3+ SaaS tools. Subscription behavior is already established.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>They expect to buy once and own it forever. Subscription pricing will create friction every month.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="section-4">
+    <div class="section-header" onclick="toggleSection('section-4')">
+      <div class="section-number">04</div>
+      <div class="section-title-block">
+        <div class="section-title">Competition Audit</div>
+        <div class="section-purpose">What exists, what's broken about it, and is that breakage something you can fix?</div>
+      </div>
+      <div class="section-progress" id="prog-section-4">0 / 4</div>
+      <div class="chevron"><svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg></div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Have you used the top 2–3 competing products yourself — not just read about them?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>You can speak specifically to what breaks, what's confusing, and what users complain about in their reviews.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>You only looked at landing pages and assumed you understood the product.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is there a specific, articulable reason why existing solutions are failing the people you're targeting?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>"Existing tools require 10 manual steps. We reduce it to 1 photo." Specific, testable, demoable.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>"We'll just do it better." Better at what, specifically? "Better" is not a product strategy.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Have you read the 1-star and 2-star reviews of every competing product you can find?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>The same 2–3 complaints appear repeatedly across reviews. That's your product spec written by your future customers.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>The negative reviews are scattered and random. No consistent pain means no clear opening.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is there a reason a well-funded competitor hasn't already solved the problem you're targeting?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>The market is too small for them, too niche, or requires domain knowledge they don't have. That's exactly where a solo dev can win.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>There's no good reason. A large competitor could build this in a sprint and you'd be dead. Know the answer before you start.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="section-5">
+    <div class="section-header" onclick="toggleSection('section-5')">
+      <div class="section-number">05</div>
+      <div class="section-title-block">
+        <div class="section-title">Unfair Advantage</div>
+        <div class="section-purpose">Why you, specifically? What do you know or have access to that others don't?</div>
+      </div>
+      <div class="section-progress" id="prog-section-5">0 / 3</div>
+      <div class="chevron"><svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg></div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Do you have domain knowledge in this problem area that would take someone else 5+ years to acquire?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>You've worked in this industry, built systems for it, or lived the problem. That pattern recognition is your moat.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>You're building in a domain you know nothing about because you heard it was a good market. You'll make expensive avoidable mistakes.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Do you have direct access to the audience — or can you build access quickly through distribution channels you already have?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>You're active in communities where your target user hangs out. Or your channel/newsletter already reaches them.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>You'll have to build the audience from scratch at the same time as the product. That's two hard problems at once.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Can you build a version of this faster than a team at a funded startup — because you know exactly what matters and what doesn't?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>Your domain expertise means you can cut scope ruthlessly and build the 20% that solves 80% of the problem.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>You'd need 6 months of research just to understand what to build. Speed is a solo dev advantage — don't squander it on unfamiliar territory.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="section-6">
+    <div class="section-header" onclick="toggleSection('section-6')">
+      <div class="section-number">06</div>
+      <div class="section-title-block">
+        <div class="section-title">Build Scope</div>
+        <div class="section-purpose">What's the smallest version that proves the core assumption?</div>
+      </div>
+      <div class="section-progress" id="prog-section-6">0 / 4</div>
+      <div class="chevron"><svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg></div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Can you describe the MVP in one paragraph — what it does, what it doesn't do, and what assumption it's designed to test?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>"A tool that takes one photo and generates a complete eBay title, description, and pricing estimate. Tests whether resellers will pay for automated listing copy."</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>The MVP description runs to bullet points across three categories. That's not an MVP — that's a product roadmap. Cut until it hurts.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Can a single developer (you) build and ship the MVP in 4–6 weeks or less?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>The MVP is tightly scoped enough that it can ship before you lose momentum or circumstances change.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>The minimum viable version is still a 3-month build. Either the scope is too large or it's not actually the minimum.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is there a version of validation you can do before writing any code — a landing page, a waitlist, a manual process done for 5 people?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>You ran the process manually for 3 paying customers before writing a line of code. That's the strongest possible validation signal.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>Your answer is "no, it requires the software to work." Usually means the scope is too complex or the validation step is being skipped.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Do you have a clear success metric for the MVP — a specific number that tells you whether to keep building or stop?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>"10 paying users in the first 30 days after launch." Binary. Measurable. Forces a real decision.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>"See how it goes." Vague success criteria means you'll keep building indefinitely rather than making a real call.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section" id="section-7">
+    <div class="section-header" onclick="toggleSection('section-7')">
+      <div class="section-number">07</div>
+      <div class="section-title-block">
+        <div class="section-title">Distribution Path</div>
+        <div class="section-purpose">How will the first 10 customers find it — before you build anything?</div>
+      </div>
+      <div class="section-progress" id="prog-section-7">0 / 4</div>
+      <div class="chevron"><svg viewBox="0 0 14 14"><polyline points="2,4 7,10 12,4"/></svg></div>
+    </div>
+    <div class="section-body">
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Can you name 3 specific places — communities, channels, newsletters, forums — where your target user spends time right now?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>r/Flipping, eBay seller forums, Facebook groups for resellers. Specific enough that you can post there tomorrow.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>"Social media." Not a distribution strategy. Where specifically? What content? Why would they care?</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Do you have a way to reach your first 10 potential users today — without waiting for SEO, ads, or YouTube to work?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>You can DM 10 specific people right now who have the problem. First users come from direct outreach, not passive discovery.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>"I'll launch on Product Hunt." Product Hunt is a launch amplifier, not a user acquisition strategy for a niche tool.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">Is the product shareable — will users naturally tell others about it, or is it private by nature?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>Users show their listings to other sellers. The output of your tool is visible in the wild, driving organic word of mouth.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>The product is entirely private. Growth will require paid acquisition — which changes your unit economics significantly.</p></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="question-row">
+          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
+          <div class="q-text">If the YouTube channel or community you're building doesn't exist yet — do you have an alternate distribution path for the first 30 days?</div>
+        </div>
+        <div class="signals">
+          <div class="signal good"><div class="signal-label">Good signal</div><p>Yes — specific subreddits, Discord communities, cold outreach to people who've posted about this problem publicly.</p></div>
+          <div class="signal bad"><div class="signal-label">Red flag</div><p>The entire distribution plan depends on an audience you haven't built yet. Don't tie product launch timing to audience timing.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCORE SECTION -->
+  <div class="score-section">
+    <div class="score-label">Your Validation Score</div>
+    <div class="score-display"><span id="score-num">0</span> <span>/ 28 questions answered</span></div>
+    <div class="score-bar-track">
+      <div class="score-bar-fill" id="score-bar"></div>
+    </div>
+    <div class="score-verdict" id="score-verdict">Check off questions above to see your score.</div>
+  </div>
+
+  <footer class="footer">
+    <div>
+      <div class="footer-brand">NUUREVA / Stack Levels</div>
+      <div class="footer-sub">Built in public — nuureva.com &nbsp;·&nbsp; @StackLevels</div>
+    </div>
+    <div class="footer-links">
+      <a href="https://nuureva.com">nuureva.com</a>
+      <a href="https://youtube.com/@StackLevels">youtube.com/@StackLevels</a>
+      <a href="https://quriolens.com">quriolens.com</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  var sectionIds = ['section-1','section-2','section-3','section-4','section-5','section-6','section-7'];
+
+  function toggleSection(id) {
+    var clicked = document.getElementById(id);
+    var isOpen = clicked.classList.contains('open');
+    sectionIds.forEach(function(sid) {
+      document.getElementById(sid).classList.remove('open');
+    });
+    if (!isOpen) {
+      clicked.classList.add('open');
+    }
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    updateScore();
+    updateSectionProgress(el.closest('.section').id);
+  }
+
+  function updateSectionProgress(sectionId) {
+    var section = document.getElementById(sectionId);
+    var total = section.querySelectorAll('.q-checkbox').length;
+    var checked = section.querySelectorAll('.q-checkbox.checked').length;
+    var badge = document.getElementById('prog-' + sectionId);
+    badge.textContent = checked + ' / ' + total;
+    badge.classList.toggle('complete', checked === total);
+  }
+
+  function updateScore() {
+    var total = document.querySelectorAll('.q-checkbox.checked').length;
+    document.getElementById('score-num').textContent = total;
+    var pct = Math.round((total / 28) * 100);
+    var bar = document.getElementById('score-bar');
+    var verdict = document.getElementById('score-verdict');
+    bar.style.width = pct + '%';
+
+    if (total === 0) {
+      verdict.innerHTML = 'Check off questions above to see your score.';
+      bar.style.background = 'rgba(255,255,255,0.15)';
+    } else if (total <= 10) {
+      verdict.innerHTML = '<strong>Stop.</strong> This idea needs more validation before you write a line of code. Go back to Sections 1–3 and do the research work first.';
+      bar.style.background = '#E8524A';
+    } else if (total <= 17) {
+      verdict.innerHTML = '<strong>Proceed carefully.</strong> You have some signal but real gaps remain. Identify which sections scored lowest and close those gaps before building anything.';
+      bar.style.background = '#E8824A';
+    } else if (total <= 22) {
+      verdict.innerHTML = '<strong>Solid foundation.</strong> You understand the problem well enough to start building the MVP. Keep the scope tight and ship fast — learning through use will close the remaining gaps.';
+      bar.style.background = '#4B8EF1';
+    } else {
+      verdict.innerHTML = '<strong>Build it.</strong> You\'ve done the work. You know who has the problem, why existing solutions fail, and how you\'ll reach your first customers. Ship the smallest version and start learning.';
+      bar.style.background = '#3ecf8e';
+    }
+  }
+</script>
+</body>
+</html>
