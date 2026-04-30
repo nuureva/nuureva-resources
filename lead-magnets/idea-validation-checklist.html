@@ -250,57 +250,80 @@
   @media (min-width: 480px) { .question-item { padding: 18px 24px; } }
   .question-item:last-child { border-bottom: none; }
 
-  .question-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-  }
-
-  .q-checkbox {
-    width: 24px; height: 24px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    border-radius: 5px;
-    flex-shrink: 0;
-    margin-top: 1px;
-    position: relative;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .q-checkbox.checked { background: var(--accent-blue); border-color: var(--accent-blue); }
-  .q-checkbox.checked::after {
-    content: '';
-    position: absolute;
-    top: 3px; left: 7px;
-    width: 6px; height: 11px;
-    border: 2px solid #fff;
-    border-top: none; border-left: none;
-    transform: rotate(45deg);
-  }
-
   .q-text {
     font-size: clamp(1rem, 3.8vw, 1rem);
     color: var(--text-primary);
     line-height: 1.6;
-    flex: 1;
+    font-weight: 500;
   }
 
-  /* Signal rows */
+  /* Signal rows — now clickable answer cards */
   .signals {
     display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
-    margin-top: 4px;
-    padding-left: 38px;
   }
   @media (min-width: 600px) {
     .signals { grid-template-columns: 1fr 1fr; }
   }
 
   .signal {
-    border-radius: 6px;
-    padding: 10px 12px;
+    border-radius: 8px;
+    padding: 12px 14px;
     font-size: clamp(0.9rem, 3.2vw, 0.85rem);
     line-height: 1.55;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s, border-color 0.15s;
+    user-select: none;
+    position: relative;
+  }
+
+  .signal:hover {
+    transform: translateY(-1px);
+  }
+
+  .signal:active {
+    transform: translateY(0);
+  }
+
+  /* Dimmed state — when sibling is selected */
+  .signal.dimmed {
+    opacity: 0.35;
+  }
+
+  /* Selected states */
+  .signal.good.selected {
+    border-color: rgba(62,207,142,0.6) !important;
+    background: rgba(62,207,142,0.13) !important;
+    box-shadow: 0 0 0 2px rgba(62,207,142,0.2);
+  }
+
+  .signal.bad.selected {
+    border-color: rgba(232,82,74,0.5) !important;
+    background: rgba(232,82,74,0.11) !important;
+    box-shadow: 0 0 0 2px rgba(232,82,74,0.18);
+  }
+
+  /* Selected checkmark on good card */
+  .signal.good.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 0.75rem;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* Selected x on bad card */
+  .signal.bad.selected::after {
+    content: '✕';
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 0.75rem;
+    color: var(--red);
+    font-weight: 700;
   }
 
   .signal-label {
@@ -308,7 +331,7 @@
     font-size: 0.65rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     font-weight: 500;
   }
 
@@ -420,7 +443,7 @@
 
   <div class="how-to-use">
     <div class="how-to-use-label">How to use this</div>
-    <p>Work through each section before starting a new project. Check off each question you can answer confidently. Green signals = evidence you're on solid ground. Red signals = a warning worth sitting with. If you're honest, an idea with fewer than 18 checks is worth pausing on. An idea with 22+ is worth building.</p>
+    <p>For each question, click the card that best describes where you stand. Green card = strong signal (+1 point). Red card = warning sign (0 points). Your score updates as you go. An idea with 22+ points is worth building.</p>
   </div>
 
   <!-- SECTION 1 -->
@@ -437,46 +460,34 @@
     <div class="section-body">
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Can you describe the problem in one sentence — from the customer's point of view, not yours?</div>
-        </div>
+        <div class="q-text">Can you describe the problem in one sentence — from the customer's point of view, not yours?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>"eBay resellers spend 45 minutes per listing writing titles and descriptions manually."</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>"People need better productivity tools." Too vague to build anything against.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>"eBay resellers spend 45 minutes per listing writing titles and descriptions manually."</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>"People need better productivity tools." Too vague to build anything against.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is this a problem someone experiences repeatedly — not just once?</div>
-        </div>
+        <div class="q-text">Is this a problem someone experiences repeatedly — not just once?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>The problem happens weekly or daily. Recurring pain means recurring willingness to pay.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>It's a one-time event (moving house, planning a wedding). Hard to build subscription revenue on one-time problems.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>The problem happens weekly or daily. Recurring pain means recurring willingness to pay.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>It's a one-time event (moving house, planning a wedding). Hard to build subscription revenue on one-time problems.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Do you have personal experience with this problem — or have you directly observed someone who does?</div>
-        </div>
+        <div class="q-text">Do you have personal experience with this problem — or have you directly observed someone who does?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>You've lived this problem or spent real time with people who have. You understand the nuance.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>You read about it in a Reddit thread and thought it sounded interesting. Surface-level problem awareness leads to surface-level solutions.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>You've lived this problem or spent real time with people who have. You understand the nuance.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>You read about it in a Reddit thread and thought it sounded interesting. Surface-level problem awareness leads to surface-level solutions.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is the pain acute (it actively costs time, money, or stress) or merely inconvenient?</div>
-        </div>
+        <div class="q-text">Is the pain acute (it actively costs time, money, or stress) or merely inconvenient?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>People lose money, hours, or sleep because of this problem. Acute pain has budget attached to it.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>It's mildly annoying. People tolerate mildly annoying. They pay to fix acutely painful.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>People lose money, hours, or sleep because of this problem. Acute pain has budget attached to it.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>It's mildly annoying. People tolerate mildly annoying. They pay to fix acutely painful.</p></div>
         </div>
       </div>
 
@@ -497,46 +508,34 @@
     <div class="section-body">
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Can you find at least 5 real people publicly complaining about this problem — on Reddit, forums, reviews, or community groups?</div>
-        </div>
+        <div class="q-text">Can you find at least 5 real people publicly complaining about this problem — on Reddit, forums, reviews, or community groups?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>Specific threads, posts, reviews you can link to. Unprompted public complaints are the purest demand signal.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>You searched and found nothing. Either the problem doesn't exist or the audience isn't vocal online — both are hard starting points.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>Specific threads, posts, reviews you can link to. Unprompted public complaints are the purest demand signal.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>You searched and found nothing. Either the problem doesn't exist or the audience isn't vocal online — both are hard starting points.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Are people currently paying for an imperfect solution — a workaround, a freelancer, or a tool that does 60% of the job?</div>
-        </div>
+        <div class="q-text">Are people currently paying for an imperfect solution — a workaround, a freelancer, or a tool that does 60% of the job?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>Existing payment behavior proves the problem is real and there's already a budget. You're competing for existing spend, not creating a new category.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>Nobody is paying anything for any version of this solution. Either the problem isn't painful enough or you've discovered a gap nobody wants to fill.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>Existing payment behavior proves the problem is real and there's already a budget. You're competing for existing spend, not creating a new category.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>Nobody is paying anything for any version of this solution. Either the problem isn't painful enough or you've discovered a gap nobody wants to fill.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Have you talked directly to at least 3 people who have this problem — not to pitch, but to listen?</div>
-        </div>
+        <div class="q-text">Have you talked directly to at least 3 people who have this problem — not to pitch, but to listen?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>Real conversations revealed something you didn't expect. The best validation sessions change your assumptions.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>Everyone you talked to is a friend or family member. Social proximity makes honest feedback almost impossible.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>Real conversations revealed something you didn't expect. The best validation sessions change your assumptions.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>Everyone you talked to is a friend or family member. Social proximity makes honest feedback almost impossible.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is there a measurable, specific outcome people want — not just a vague desire to "be more productive"?</div>
-        </div>
+        <div class="q-text">Is there a measurable, specific outcome people want — not just a vague desire to "be more productive"?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>"Save 2 hours per week on listing creation." Specific outcomes give you a marketing hook and a product target simultaneously.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>"Help people do things better." You can't build a product against a vague aspiration.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>"Save 2 hours per week on listing creation." Specific outcomes give you a marketing hook and a product target simultaneously.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>"Help people do things better." You can't build a product against a vague aspiration.</p></div>
         </div>
       </div>
 
@@ -557,46 +556,34 @@
     <div class="section-body">
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Can you describe your buyer in one sentence — job title, situation, and what they're trying to accomplish?</div>
-        </div>
+        <div class="q-text">Can you describe your buyer in one sentence — job title, situation, and what they're trying to accomplish?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>"Part-time eBay resellers selling 20–50 items/month who want to scale without hiring."</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>"Anyone who sells things online." Trying to serve everyone means you'll resonate with no one.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>"Part-time eBay resellers selling 20–50 items/month who want to scale without hiring."</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>"Anyone who sells things online." Trying to serve everyone means you'll resonate with no one.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Does this person already spend money on tools or services related to this problem?</div>
-        </div>
+        <div class="q-text">Does this person already spend money on tools or services related to this problem?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>They have a Canva subscription, a Notion workspace, a VA they pay $200/month. Budget exists. You're asking them to reallocate it.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>They use only free tools and expect everything to be free. Building for this buyer means competing on zero.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>They have a Canva subscription, a Notion workspace, a VA they pay $200/month. Budget exists. You're asking them to reallocate it.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>They use only free tools and expect everything to be free. Building for this buyer means competing on zero.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is there a triggering event that makes someone ready to pay — a specific moment when the pain becomes acute enough to act?</div>
-        </div>
+        <div class="q-text">Is there a triggering event that makes someone ready to pay — a specific moment when the pain becomes acute enough to act?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>"Just listed their 100th item manually and realized they're burning their entire margin on time." Triggering events are your marketing moments.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>There's no specific moment. The pain is ambient and chronic but never forces a decision.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>"Just listed their 100th item manually and realized they're burning their entire margin on time." Triggering events are your marketing moments.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>There's no specific moment. The pain is ambient and chronic but never forces a decision.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Would your buyer pay monthly or is this a one-time purchase? And is that consistent with how they currently buy tools?</div>
-        </div>
+        <div class="q-text">Would your buyer pay monthly or is this a one-time purchase? And is that consistent with how they currently buy tools?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>They already pay monthly for 3+ SaaS tools. Subscription behavior is already established.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>They expect to buy once and own it forever. Subscription pricing will create friction every month.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>They already pay monthly for 3+ SaaS tools. Subscription behavior is already established.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>They expect to buy once and own it forever. Subscription pricing will create friction every month.</p></div>
         </div>
       </div>
 
@@ -617,46 +604,34 @@
     <div class="section-body">
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Have you used the top 2–3 competing products yourself — not just read about them?</div>
-        </div>
+        <div class="q-text">Have you used the top 2–3 competing products yourself — not just read about them?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>You can speak specifically to what breaks, what's confusing, and what users complain about in their reviews.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>You only looked at landing pages and assumed you understood the product.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>You can speak specifically to what breaks, what's confusing, and what users complain about in their reviews.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>You only looked at landing pages and assumed you understood the product.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is there a specific, articulable reason why existing solutions are failing the people you're targeting?</div>
-        </div>
+        <div class="q-text">Is there a specific, articulable reason why existing solutions are failing the people you're targeting?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>"Existing tools require 10 manual steps. We reduce it to 1 photo." Specific, testable, demoable.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>"We'll just do it better." Better at what, specifically? "Better" is not a product strategy.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>"Existing tools require 10 manual steps. We reduce it to 1 photo." Specific, testable, demoable.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>"We'll just do it better." Better at what, specifically? "Better" is not a product strategy.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Have you read the 1-star and 2-star reviews of every competing product you can find?</div>
-        </div>
+        <div class="q-text">Have you read the 1-star and 2-star reviews of every competing product you can find?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>The same 2–3 complaints appear repeatedly across reviews. That's your product spec written by your future customers.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>The negative reviews are scattered and random. No consistent pain means no clear opening.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>The same 2–3 complaints appear repeatedly across reviews. That's your product spec written by your future customers.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>The negative reviews are scattered and random. No consistent pain means no clear opening.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is there a reason a well-funded competitor hasn't already solved the problem you're targeting?</div>
-        </div>
+        <div class="q-text">Is there a reason a well-funded competitor hasn't already solved the problem you're targeting?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>The market is too small for them, too niche, or requires domain knowledge they don't have. That's exactly where a solo dev can win.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>There's no good reason. A large competitor could build this in a sprint and you'd be dead. Know the answer before you start.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>The market is too small for them, too niche, or requires domain knowledge they don't have. That's exactly where a solo dev can win.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>There's no good reason. A large competitor could build this in a sprint and you'd be dead. Know the answer before you start.</p></div>
         </div>
       </div>
 
@@ -677,35 +652,26 @@
     <div class="section-body">
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Do you have domain knowledge in this problem area that would take someone else 5+ years to acquire?</div>
-        </div>
+        <div class="q-text">Do you have domain knowledge in this problem area that would take someone else 5+ years to acquire?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>You've worked in this industry, built systems for it, or lived the problem. That pattern recognition is your moat.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>You're building in a domain you know nothing about because you heard it was a good market. You'll make expensive avoidable mistakes.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>You've worked in this industry, built systems for it, or lived the problem. That pattern recognition is your moat.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>You're building in a domain you know nothing about because you heard it was a good market. You'll make expensive avoidable mistakes.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Do you have direct access to the audience — or can you build access quickly through distribution channels you already have?</div>
-        </div>
+        <div class="q-text">Do you have direct access to the audience — or can you build access quickly through distribution channels you already have?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>You're active in communities where your target user hangs out. Or your channel/newsletter already reaches them.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>You'll have to build the audience from scratch at the same time as the product. That's two hard problems at once.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>You're active in communities where your target user hangs out. Or your channel/newsletter already reaches them.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>You'll have to build the audience from scratch at the same time as the product. That's two hard problems at once.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Can you build a version of this faster than a team at a funded startup — because you know exactly what matters and what doesn't?</div>
-        </div>
+        <div class="q-text">Can you build a version of this faster than a team at a funded startup — because you know exactly what matters and what doesn't?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>Your domain expertise means you can cut scope ruthlessly and build the 20% that solves 80% of the problem.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>You'd need 6 months of research just to understand what to build. Speed is a solo dev advantage — don't squander it on unfamiliar territory.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>Your domain expertise means you can cut scope ruthlessly and build the 20% that solves 80% of the problem.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>You'd need 6 months of research just to understand what to build. Speed is a solo dev advantage — don't squander it on unfamiliar territory.</p></div>
         </div>
       </div>
 
@@ -726,46 +692,34 @@
     <div class="section-body">
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Can you describe the MVP in one paragraph — what it does, what it doesn't do, and what assumption it's designed to test?</div>
-        </div>
+        <div class="q-text">Can you describe the MVP in one paragraph — what it does, what it doesn't do, and what assumption it's designed to test?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>"A tool that takes one photo and generates a complete eBay title, description, and pricing estimate. Tests whether resellers will pay for automated listing copy."</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>The MVP description runs to bullet points across three categories. That's not an MVP — that's a product roadmap. Cut until it hurts.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>"A tool that takes one photo and generates a complete eBay title, description, and pricing estimate. Tests whether resellers will pay for automated listing copy."</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>The MVP description runs to bullet points across three categories. That's not an MVP — that's a product roadmap. Cut until it hurts.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Can a single developer (you) build and ship the MVP in 4–6 weeks or less?</div>
-        </div>
+        <div class="q-text">Can a single developer (you) build and ship the MVP in 4–6 weeks or less?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>The MVP is tightly scoped enough that it can ship before you lose momentum or circumstances change.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>The minimum viable version is still a 3-month build. Either the scope is too large or it's not actually the minimum.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>The MVP is tightly scoped enough that it can ship before you lose momentum or circumstances change.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>The minimum viable version is still a 3-month build. Either the scope is too large or it's not actually the minimum.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is there a version of validation you can do before writing any code — a landing page, a waitlist, a manual process done for 5 people?</div>
-        </div>
+        <div class="q-text">Is there a version of validation you can do before writing any code — a landing page, a waitlist, a manual process done for 5 people?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>You ran the process manually for 3 paying customers before writing a line of code. That's the strongest possible validation signal.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>Your answer is "no, it requires the software to work." Usually means the scope is too complex or the validation step is being skipped.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>You ran the process manually for 3 paying customers before writing a line of code. That's the strongest possible validation signal.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>Your answer is "no, it requires the software to work." Usually means the scope is too complex or the validation step is being skipped.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Do you have a clear success metric for the MVP — a specific number that tells you whether to keep building or stop?</div>
-        </div>
+        <div class="q-text">Do you have a clear success metric for the MVP — a specific number that tells you whether to keep building or stop?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>"10 paying users in the first 30 days after launch." Binary. Measurable. Forces a real decision.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>"See how it goes." Vague success criteria means you'll keep building indefinitely rather than making a real call.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>"10 paying users in the first 30 days after launch." Binary. Measurable. Forces a real decision.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>"See how it goes." Vague success criteria means you'll keep building indefinitely rather than making a real call.</p></div>
         </div>
       </div>
 
@@ -786,46 +740,34 @@
     <div class="section-body">
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Can you name 3 specific places — communities, channels, newsletters, forums — where your target user spends time right now?</div>
-        </div>
+        <div class="q-text">Can you name 3 specific places — communities, channels, newsletters, forums — where your target user spends time right now?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>r/Flipping, eBay seller forums, Facebook groups for resellers. Specific enough that you can post there tomorrow.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>"Social media." Not a distribution strategy. Where specifically? What content? Why would they care?</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>r/Flipping, eBay seller forums, Facebook groups for resellers. Specific enough that you can post there tomorrow.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>"Social media." Not a distribution strategy. Where specifically? What content? Why would they care?</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Do you have a way to reach your first 10 potential users today — without waiting for SEO, ads, or YouTube to work?</div>
-        </div>
+        <div class="q-text">Do you have a way to reach your first 10 potential users today — without waiting for SEO, ads, or YouTube to work?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>You can DM 10 specific people right now who have the problem. First users come from direct outreach, not passive discovery.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>"I'll launch on Product Hunt." Product Hunt is a launch amplifier, not a user acquisition strategy for a niche tool.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>You can DM 10 specific people right now who have the problem. First users come from direct outreach, not passive discovery.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>"I'll launch on Product Hunt." Product Hunt is a launch amplifier, not a user acquisition strategy for a niche tool.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">Is the product shareable — will users naturally tell others about it, or is it private by nature?</div>
-        </div>
+        <div class="q-text">Is the product shareable — will users naturally tell others about it, or is it private by nature?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>Users show their listings to other sellers. The output of your tool is visible in the wild, driving organic word of mouth.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>The product is entirely private. Growth will require paid acquisition — which changes your unit economics significantly.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>Users show their listings to other sellers. The output of your tool is visible in the wild, driving organic word of mouth.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>The product is entirely private. Growth will require paid acquisition — which changes your unit economics significantly.</p></div>
         </div>
       </div>
 
       <div class="question-item">
-        <div class="question-row">
-          <div class="q-checkbox" onclick="toggleCheck(this)"></div>
-          <div class="q-text">If the YouTube channel or community you're building doesn't exist yet — do you have an alternate distribution path for the first 30 days?</div>
-        </div>
+        <div class="q-text">If the YouTube channel or community you're building doesn't exist yet — do you have an alternate distribution path for the first 30 days?</div>
         <div class="signals">
-          <div class="signal good"><div class="signal-label">Good signal</div><p>Yes — specific subreddits, Discord communities, cold outreach to people who've posted about this problem publicly.</p></div>
-          <div class="signal bad"><div class="signal-label">Red flag</div><p>The entire distribution plan depends on an audience you haven't built yet. Don't tie product launch timing to audience timing.</p></div>
+          <div class="signal good" onclick="selectSignal(this)"><div class="signal-label">Good signal</div><p>Yes — specific subreddits, Discord communities, cold outreach to people who've posted about this problem publicly.</p></div>
+          <div class="signal bad" onclick="selectSignal(this)"><div class="signal-label">Red flag</div><p>The entire distribution plan depends on an audience you haven't built yet. Don't tie product launch timing to audience timing.</p></div>
         </div>
       </div>
 
@@ -835,7 +777,7 @@
   <!-- SCORE SECTION -->
   <div class="score-section">
     <div class="score-label">Your Validation Score</div>
-    <div class="score-display"><span id="score-num">0</span> <span>/ 28 questions answered</span></div>
+    <div class="score-display"><span id="score-num">0</span> <span>/ 28 green signals</span></div>
     <div class="score-bar-track">
       <div class="score-bar-fill" id="score-bar"></div>
     </div>
@@ -865,28 +807,46 @@
     sectionIds.forEach(function(sid) {
       document.getElementById(sid).classList.remove('open');
     });
-    if (!isOpen) {
-      clicked.classList.add('open');
-    }
+    if (!isOpen) clicked.classList.add('open');
   }
 
-  function toggleCheck(el) {
-    el.classList.toggle('checked');
+  function selectSignal(el) {
+    var signals = el.parentElement.querySelectorAll('.signal');
+    var alreadySelected = el.classList.contains('selected');
+
+    // Clear both cards first
+    signals.forEach(function(s) {
+      s.classList.remove('selected', 'dimmed');
+    });
+
+    // If clicking the already-selected card, deselect (toggle off)
+    if (alreadySelected) {
+      updateScore();
+      updateSectionProgress(el.closest('.section').id);
+      return;
+    }
+
+    // Select clicked, dim the other
+    el.classList.add('selected');
+    signals.forEach(function(s) {
+      if (s !== el) s.classList.add('dimmed');
+    });
+
     updateScore();
     updateSectionProgress(el.closest('.section').id);
   }
 
   function updateSectionProgress(sectionId) {
     var section = document.getElementById(sectionId);
-    var total = section.querySelectorAll('.q-checkbox').length;
-    var checked = section.querySelectorAll('.q-checkbox.checked').length;
+    var total = section.querySelectorAll('.question-item').length;
+    var answered = section.querySelectorAll('.signal.good.selected').length;
     var badge = document.getElementById('prog-' + sectionId);
-    badge.textContent = checked + ' / ' + total;
-    badge.classList.toggle('complete', checked === total);
+    badge.textContent = answered + ' / ' + total;
+    badge.classList.toggle('complete', answered === total);
   }
 
   function updateScore() {
-    var total = document.querySelectorAll('.q-checkbox.checked').length;
+    var total = document.querySelectorAll('.signal.good.selected').length;
     document.getElementById('score-num').textContent = total;
     var pct = Math.round((total / 28) * 100);
     var bar = document.getElementById('score-bar');
@@ -894,7 +854,7 @@
     bar.style.width = pct + '%';
 
     if (total === 0) {
-      verdict.innerHTML = 'Check off questions above to see your score.';
+      verdict.innerHTML = 'Click the green or red card on each question to see your score.';
       bar.style.background = 'rgba(255,255,255,0.15)';
     } else if (total <= 10) {
       verdict.innerHTML = '<strong>Stop.</strong> This idea needs more validation before you write a line of code. Go back to Sections 1–3 and do the research work first.';
