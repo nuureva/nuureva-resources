@@ -36,6 +36,7 @@
     font-family: var(--body);
     line-height: 1.7;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
   body::before {
@@ -44,7 +45,7 @@
     top: -20%;
     left: 50%;
     transform: translateX(-50%);
-    width: 900px;
+    width: min(900px, 100vw);
     height: 600px;
     background: radial-gradient(ellipse, rgba(75,142,241,0.065) 0%, transparent 70%);
     pointer-events: none;
@@ -56,22 +57,41 @@
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 1fr;
     min-height: 100vh;
     max-width: 1060px;
     margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .layout { grid-template-columns: 200px 1fr; }
+  }
+
+  @media (min-width: 1024px) {
+    .layout { grid-template-columns: 220px 1fr; }
   }
 
   /* ── SIDEBAR ── */
   .sidebar {
-    padding: 48px 24px 48px 32px;
-    border-right: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .sidebar {
+      display: flex;
+      padding: 40px 20px 48px 28px;
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-direction: column;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .sidebar { padding: 48px 24px 48px 32px; }
   }
 
   .sidebar-brand {
@@ -168,51 +188,62 @@
 
   /* ── MAIN CONTENT ── */
   .main {
-    padding: 48px 48px 80px 48px;
+    padding: 32px 18px 60px;
     max-width: 760px;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  @media (min-width: 480px) {
+    .main { padding: 40px 24px 70px; }
+  }
+
+  @media (min-width: 768px) {
+    .main { padding: 48px 40px 80px; }
+  }
+
+  @media (min-width: 1024px) {
+    .main { padding: 48px 48px 80px; }
   }
 
   /* ── PAGE HEADER ── */
   .page-header {
-    margin-bottom: 56px;
-    padding-bottom: 40px;
+    margin-bottom: 40px;
+    padding-bottom: 32px;
     border-bottom: 1px solid var(--border);
   }
+  @media (min-width: 768px) { .page-header { margin-bottom: 56px; padding-bottom: 40px; } }
 
   .page-brand {
     font-family: var(--mono);
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     color: var(--accent-orange);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
 
   .page-title {
     font-family: var(--display);
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1.1;
     letter-spacing: -0.02em;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .page-subtitle {
-    font-size: 1rem;
+    font-size: clamp(1rem, 3.5vw, 1rem);
     color: var(--text-secondary);
     line-height: 1.65;
     max-width: 560px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .page-subtitle strong { color: var(--text-primary); font-weight: 500; }
 
-  .meta-row {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
+  .meta-row { display: flex; gap: 14px; flex-wrap: wrap; }
 
   .meta-tag {
     font-family: var(--mono);
@@ -225,10 +256,116 @@
 
   /* ── SECTION ── */
   .section {
-    margin-bottom: 64px;
     scroll-margin-top: 32px;
+    margin-bottom: 10px;
   }
 
+  /* Section 1 stays always open — no accordion wrapper */
+  #section-1 {
+    margin-bottom: 10px;
+  }
+
+  /* Sections 2-6 — accordion panels */
+  .section-panel {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    scroll-margin-top: 32px;
+    transition: border-color 0.2s;
+  }
+
+  .section-panel.open {
+    border-color: var(--border-accent);
+  }
+
+  .section-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--surface);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .section-panel-header:hover {
+    background: var(--surface-hover);
+  }
+
+  .section-panel.open .section-panel-header {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-panel-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 4px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+  }
+
+  .section-panel-title-block {
+    flex: 1;
+  }
+
+  .section-panel-title {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .section-panel-tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .section-panel-chevron {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.22s ease;
+  }
+
+  .section-panel-chevron svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .section-panel.open .section-panel-chevron {
+    transform: rotate(180deg);
+  }
+
+  .section-panel-body {
+    display: none;
+    padding: 28px 28px 32px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .section-panel.open .section-panel-body {
+    display: block;
+  }
+
+  /* Section 1 — always visible styles (non-panel) */
   .section-eyebrow {
     display: flex;
     align-items: center;
@@ -265,10 +402,10 @@
   }
 
   .section-lead {
-    font-size: 0.95rem;
+    font-size: clamp(1rem, 3.5vw, 0.95rem);
     color: var(--text-secondary);
     line-height: 1.65;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
     max-width: 580px;
     font-style: italic;
   }
@@ -278,6 +415,7 @@
     display: grid;
     gap: 8px;
     margin-bottom: 24px;
+    min-width: 0;
   }
 
   .tool-card {
@@ -368,18 +506,18 @@
   }
 
   .tool-desc {
-    font-size: 0.88rem;
+    font-size: clamp(0.98rem, 3.5vw, 0.88rem);
     color: var(--text-secondary);
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: 10px;
   }
 
   .tool-why {
     font-family: var(--mono);
-    font-size: 0.72rem;
+    font-size: clamp(0.82rem, 3vw, 0.72rem);
     color: var(--accent-blue);
-    line-height: 1.55;
-    padding: 8px 12px;
+    line-height: 1.6;
+    padding: 10px 14px;
     background: rgba(75,142,241,0.05);
     border-left: 2px solid rgba(75,142,241,0.3);
     border-radius: 0 4px 4px 0;
@@ -479,8 +617,12 @@
   .stage-body {
     padding: 14px 18px;
     display: none;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 14px;
+  }
+
+  @media (min-width: 600px) {
+    .stage-body { grid-template-columns: 1fr 1fr; }
   }
 
   .stage-card.open .stage-body {
@@ -489,7 +631,7 @@
 
   .stage-col-label {
     font-family: var(--mono);
-    font-size: 0.62rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -497,18 +639,18 @@
   }
 
   .stage-col p {
-    font-size: 0.85rem;
+    font-size: clamp(0.95rem, 3.5vw, 0.85rem);
     color: var(--text-secondary);
-    line-height: 1.55;
+    line-height: 1.6;
   }
 
   .stage-mistake {
     grid-column: 1 / -1;
     font-family: var(--mono);
-    font-size: 0.72rem;
+    font-size: clamp(0.82rem, 3vw, 0.72rem);
     color: var(--red);
-    line-height: 1.5;
-    padding: 8px 12px;
+    line-height: 1.55;
+    padding: 10px 14px;
     background: rgba(232,82,74,0.05);
     border-left: 2px solid rgba(232,82,74,0.25);
     border-radius: 0 4px 4px 0;
@@ -517,11 +659,18 @@
   .stage-mistake::before { content: 'Common mistake → '; font-weight: 500; }
 
   /* ── AI USAGE TABLE (Section 3) ── */
+  .ai-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 24px;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .ai-table {
     width: 100%;
+    min-width: 480px;
     border-collapse: collapse;
-    font-size: 0.86rem;
-    margin-bottom: 24px;
+    font-size: clamp(0.9rem, 3.2vw, 0.86rem);
   }
 
   .ai-table th {
@@ -557,10 +706,10 @@
   /* ── CALLOUT BOX ── */
   .callout {
     border-radius: 8px;
-    padding: 16px 20px;
+    padding: 14px 18px;
     margin: 20px 0;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: clamp(0.95rem, 3.5vw, 0.9rem);
+    line-height: 1.65;
   }
 
   .callout-blue {
@@ -593,9 +742,13 @@
   /* ── ECONOMICS TABLE (Section 4) ── */
   .econ-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr;
+    gap: 10px;
     margin-bottom: 24px;
+  }
+
+  @media (min-width: 540px) {
+    .econ-grid { grid-template-columns: 1fr 1fr; }
   }
 
   .econ-card {
@@ -616,16 +769,16 @@
 
   .econ-value {
     font-family: var(--display);
-    font-size: 1.1rem;
+    font-size: clamp(1.1rem, 4vw, 1.1rem);
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 4px;
   }
 
   .econ-desc {
-    font-size: 0.8rem;
+    font-size: clamp(0.9rem, 3.2vw, 0.8rem);
     color: var(--text-secondary);
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   /* ── SHIPPING CHECKLIST (Section 5) ── */
@@ -679,17 +832,17 @@
   }
 
   .ship-title {
-    font-size: 0.88rem;
+    font-size: clamp(0.98rem, 3.5vw, 0.88rem);
     color: var(--text-primary);
     font-weight: 500;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     font-family: var(--display);
   }
 
   .ship-note {
-    font-size: 0.78rem;
+    font-size: clamp(0.88rem, 3vw, 0.78rem);
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   .ship-category {
@@ -796,16 +949,16 @@
 
   .resource-name {
     font-family: var(--display);
-    font-size: 0.88rem;
+    font-size: clamp(0.95rem, 3.5vw, 0.88rem);
     font-weight: 700;
     color: var(--accent-blue);
     margin-bottom: 2px;
   }
 
   .resource-desc {
-    font-size: 0.8rem;
+    font-size: clamp(0.9rem, 3.2vw, 0.8rem);
     color: var(--text-secondary);
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   .resource-tag {
@@ -827,34 +980,35 @@
   .section-divider {
     border: none;
     border-top: 1px solid var(--border);
-    margin: 0 0 56px;
+    margin: 0 0 10px;
   }
 
   /* ── PROSE ── */
   .prose p {
-    font-size: 0.93rem;
+    font-size: clamp(1rem, 3.5vw, 0.93rem);
     color: var(--text-secondary);
     line-height: 1.75;
     margin-bottom: 14px;
   }
 
   .prose p strong { color: var(--text-primary); font-weight: 500; }
-
   .prose p:last-child { margin-bottom: 0; }
 
   /* ── MOBILE ── */
   @media (max-width: 700px) {
-    .layout { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .main { padding: 32px 20px 60px; }
     .stage-body { grid-template-columns: 1fr; }
     .econ-grid { grid-template-columns: 1fr; }
     .stage-mistake { grid-column: 1; }
-  }
-
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 180px 1fr; }
-    .main { padding: 40px 32px 60px; }
+    .section-panel-header { padding: 14px 16px; gap: 10px; }
+    .section-panel-body { padding: 16px 16px 20px; }
+    .section-panel-title { font-size: 1rem; }
+    .tool-header { padding: 13px 16px; }
+    .tool-body { padding: 12px 16px 14px; }
+    .stage-header { padding: 13px 16px; gap: 10px; }
+    .stage-body { padding: 12px 16px; }
+    .ship-item { padding: 12px 14px; }
+    .ship-check { width: 22px; height: 22px; }
+    .econ-grid { gap: 8px; }
   }
 </style>
 </head>
@@ -1020,12 +1174,16 @@
     <hr class="section-divider">
 
     <!-- ── SECTION 2: BUILD PROCESS ── -->
-    <section class="section" id="section-2">
-      <div class="section-eyebrow">
-        <span class="section-num">02</span>
-        <span class="section-tag">Workflow</span>
+    <div class="section-panel open" id="section-2">
+      <div class="section-panel-header" onclick="togglePanel('section-2')">
+        <span class="section-panel-num">02</span>
+        <div class="section-panel-title-block">
+          <div class="section-panel-title">The Build Process</div>
+          <div class="section-panel-tag">Workflow</div>
+        </div>
+        <div class="section-panel-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
       </div>
-      <h2 class="section-title">The Build Process</h2>
+      <div class="section-panel-body">
       <p class="section-lead">Five stages from idea to revenue. The mistake most solo developers make is treating this as a linear checklist. It isn't — but each stage has a clear goal and a clear failure mode.</p>
 
       <div class="stage-list" id="stage-list">
@@ -1131,19 +1289,24 @@
         </div>
 
       </div>
-    </section>
+    </div>
 
     <hr class="section-divider">
 
     <!-- ── SECTION 3: AI AS A BUILD TOOL ── -->
-    <section class="section" id="section-3">
-      <div class="section-eyebrow">
-        <span class="section-num">03</span>
-        <span class="section-tag">Leverage</span>
+    <div class="section-panel" id="section-3">
+      <div class="section-panel-header" onclick="togglePanel('section-3')">
+        <span class="section-panel-num">03</span>
+        <div class="section-panel-title-block">
+          <div class="section-panel-title">AI as a Build Tool</div>
+          <div class="section-panel-tag">Leverage</div>
+        </div>
+        <div class="section-panel-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
       </div>
-      <h2 class="section-title">AI as a Build Tool</h2>
+      <div class="section-panel-body">
       <p class="section-lead">Not as a toy. Not as a replacement. As a force multiplier for a developer who already knows what they're doing. The gap between "I tried AI" and "I build with AI professionally" is enormous — here's what's actually in that gap.</p>
 
+      <div class="ai-table-wrap">
       <table class="ai-table">
         <thead>
           <tr>
@@ -1170,6 +1333,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <div class="prose">
         <p><strong>How I structure a Cursor session for full-stack work:</strong> CLAUDE.md in the project root is the single context document — it tells Cursor the stack, the file structure, the naming conventions, and the rules. Every Cursor prompt starts with "Read CLAUDE.md before starting." Without that anchor, Cursor makes assumptions that drift from your actual codebase within three sessions.</p>
@@ -1184,17 +1348,22 @@
         A developer with 5 years of experience using AI builds faster than they did without it. A developer with 30 years of experience using AI builds faster than a team of 5 without it. The multiplier scales with experience because experience is what AI doesn't have — knowing what to build, what to cut, and what will break in production.
       </div>
 
-    </section>
+    </div>
+    </div>
 
     <hr class="section-divider">
 
     <!-- ── SECTION 4: SOLO DEV ECONOMICS ── -->
-    <section class="section" id="section-4">
-      <div class="section-eyebrow">
-        <span class="section-num">04</span>
-        <span class="section-tag">Business</span>
+    <div class="section-panel" id="section-4">
+      <div class="section-panel-header" onclick="togglePanel('section-4')">
+        <span class="section-panel-num">04</span>
+        <div class="section-panel-title-block">
+          <div class="section-panel-title">Solo Dev Economics</div>
+          <div class="section-panel-tag">Business</div>
+        </div>
+        <div class="section-panel-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
       </div>
-      <h2 class="section-title">Solo Dev Economics</h2>
+      <div class="section-panel-body">
       <p class="section-lead">AI changes the unit economics of software development in ways that most developers haven't fully internalized yet. Here's what actually shifts when one person can build what used to take a team.</p>
 
       <div class="econ-grid">
@@ -1228,17 +1397,22 @@
         <p><strong>Pricing at solo dev scale:</strong> Charge more than you think is reasonable. The value of saving a user 2 hours per week is not $7/month — it's $40. Developers chronically underprice because they're thinking about their time to build, not the user's time saved. Price on value delivered, not on effort invested.</p>
       </div>
 
-    </section>
+    </div>
+    </div>
 
     <hr class="section-divider">
 
     <!-- ── SECTION 5: SHIPPING CHECKLIST ── -->
-    <section class="section" id="section-5">
-      <div class="section-eyebrow">
-        <span class="section-num">05</span>
-        <span class="section-tag">Pre-launch</span>
+    <div class="section-panel" id="section-5">
+      <div class="section-panel-header" onclick="togglePanel('section-5')">
+        <span class="section-panel-num">05</span>
+        <div class="section-panel-title-block">
+          <div class="section-panel-title">Shipping Checklist</div>
+          <div class="section-panel-tag">Pre-launch</div>
+        </div>
+        <div class="section-panel-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
       </div>
-      <h2 class="section-title">Shipping Checklist</h2>
+      <div class="section-panel-body">
       <p class="section-lead">Twenty things to verify before you call something live. Every item on this list is something I've shipped without at least once. Learn from that.</p>
 
       <div class="ship-grid" id="ship-list">
@@ -1432,17 +1606,22 @@
         <div class="ship-verdict" id="ship-verdict">Check off items above to see your launch readiness.</div>
       </div>
 
-    </section>
+    </div>
+    </div>
 
     <hr class="section-divider">
 
     <!-- ── SECTION 6: RESOURCES ── -->
-    <section class="section" id="section-6">
-      <div class="section-eyebrow">
-        <span class="section-num">06</span>
-        <span class="section-tag">Reference</span>
+    <div class="section-panel" id="section-6">
+      <div class="section-panel-header" onclick="togglePanel('section-6')">
+        <span class="section-panel-num">06</span>
+        <div class="section-panel-title-block">
+          <div class="section-panel-title">Resources</div>
+          <div class="section-panel-tag">Reference</div>
+        </div>
+        <div class="section-panel-chevron"><svg viewBox="0 0 13 13"><polyline points="2,4 6.5,9 11,4"/></svg></div>
       </div>
-      <h2 class="section-title">Resources</h2>
+      <div class="section-panel-body">
       <p class="section-lead">Curated, not comprehensive. Everything here is something I actively use or reference. No filler.</p>
 
       <div class="resource-group">
@@ -1539,7 +1718,8 @@
         </div>
       </div>
 
-    </section>
+    </div>
+    </div>
 
     <!-- FOOTER -->
     <footer style="margin-top:48px;padding-top:28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;">
@@ -1558,6 +1738,18 @@
 </div>
 
 <script>
+  /* ── Section panel accordion (sections 2-6) ── */
+  var panelIds = ['section-2','section-3','section-4','section-5','section-6'];
+
+  function togglePanel(id) {
+    var clicked = document.getElementById(id);
+    var isOpen = clicked.classList.contains('open');
+    panelIds.forEach(function(pid) {
+      document.getElementById(pid).classList.remove('open');
+    });
+    if (!isOpen) clicked.classList.add('open');
+  }
+
   /* ── Tool card accordion ── */
   var toolIds = ['tool-1','tool-2','tool-3','tool-4','tool-5','tool-6','tool-7','tool-8'];
 
