@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Cited: 7 Claude Prompts — Stack Levels</title>
+<meta name="description" content="7 copy-paste Claude prompts to find the Reddit threads AI search cites in your niche and get your product into them.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: rgba(255,255,255,0.035);
+    --surface-hover: rgba(255,255,255,0.055);
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(75,142,241,0.3);
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.62);
+    --text-muted: rgba(240,238,232,0.38);
+    --accent-blue: #4B8EF1;
+    --accent-orange: #E8824A;
+    --green: #3ecf8e;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Lora', serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--body);
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(900px, 100vw);
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(75,142,241,0.065) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 18px 60px;
+  }
+  @media (min-width: 480px) { .main { padding: 40px 24px 70px; } }
+  @media (min-width: 768px) { .main { padding: 56px 40px 80px; } }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-brand {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .page-title {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .page-subtitle {
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 580px;
+    margin-bottom: 20px;
+  }
+  .page-subtitle strong { color: var(--text-primary); font-weight: 500; }
+  .meta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .meta-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .meta-tag span { color: var(--text-secondary); }
+
+  /* ── HOW TO USE ── */
+  .howto {
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 20px 20px 18px;
+    margin-bottom: 40px;
+  }
+  .howto-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent-blue);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .howto ol { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
+  .howto li {
+    counter-increment: s;
+    display: flex;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  .howto li::before {
+    content: counter(s);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 7px;
+    height: fit-content;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .howto strong { color: var(--text-primary); font-weight: 500; }
+  .bracket { color: var(--accent-orange); font-family: var(--mono); font-size: 0.88em; }
+
+  /* ── PROMPT CARDS ── */
+  .prompt {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+  .prompt:last-of-type { border-bottom: none; }
+  .prompt-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .prompt-num {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+  .prompt-tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .prompt-title {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .prompt-why {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .copy-block {
+    position: relative;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .copy-block pre {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 16px 16px 16px;
+    padding-right: 80px;
+  }
+  .copy-block pre .b { color: var(--accent-orange); }
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    background: rgba(75,142,241,0.18);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: rgba(75,142,241,0.3); }
+  .copy-btn.done { background: rgba(62,207,142,0.18); border-color: rgba(62,207,142,0.4); }
+
+  .tip {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .tip span { color: var(--accent-blue); }
+
+  /* ── BRIDGE ── */
+  .bridge {
+    margin-top: 12px;
+    background: linear-gradient(135deg, rgba(75,142,241,0.12), rgba(232,130,74,0.08));
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 24px 20px;
+  }
+  .bridge h2 {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .bridge p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.97rem; }
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    color: #07090f;
+    background: var(--text-primary);
+    border-radius: 6px;
+    padding: 11px 16px;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #ffffff; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .foot-name { font-family: var(--display); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+  .foot-sub { font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em; }
+  .foot-links { display: flex; flex-direction: column; gap: 5px; text-align: right; }
+  .foot-links a { font-family: var(--mono); font-size: 0.67rem; color: var(--accent-blue); text-decoration: none; letter-spacing: 0.04em; }
+  .foot-links a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<main class="main">
+
+  <header class="page-header">
+    <div class="page-brand">Stack Levels — nuureva.com</div>
+    <h1 class="page-title">Get <span style="color:var(--accent-orange)">Cited</span>: 7 Claude Prompts to Put Your Product in <span style="color:var(--accent-blue)">AI Search</span></h1>
+    <p class="page-subtitle">
+      <strong>Your buyers ask AI what to buy, and AI reads Reddit.</strong> These are the 7 prompts I use to find the threads AI cites in my niche and show up in them. One tool, Claude, no copying threads by hand.
+    </p>
+    <div class="meta-row">
+      <div class="meta-tag">PROMPTS <span>7</span></div>
+      <div class="meta-tag">TOOL <span>Claude</span></div>
+      <div class="meta-tag">TIME <span>~15 min</span></div>
+      <div class="meta-tag">BY <span>Carl — @StackLevels</span></div>
+    </div>
+  </header>
+
+  <section class="howto">
+    <div class="howto-title">How to use</div>
+    <ol>
+      <li><span>Open <strong>Claude</strong> (claude.ai) and turn on <strong>web search</strong>. Claude finds and reads the threads for you.</span></li>
+      <li><span>Copy a prompt and replace the <span class="bracket">[brackets]</span> with your product, buyer and subreddit.</span></li>
+      <li><span>Run them in order, in the same chat. Each one builds on the last.</span></li>
+    </ol>
+  </section>
+
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">01</span><span class="prompt-tag">Map</span></div>
+    <h2 class="prompt-title">Find the subreddits AI cites</h2>
+    <p class="prompt-why">Start with where the answers already live. This becomes your map for everything else.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p1')">Copy</button>
+<pre id="p1">I sell <span class="b">[product]</span>, a <span class="b">[category]</span> for <span class="b">[buyer]</span>. Search the web and list the 10 questions my buyers ask before they buy. For each question, name the subreddits and Reddit threads where people get it answered, with links.</pre>
+    </div>
+  </section>
+
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">02</span><span class="prompt-tag">Check</span></div>
+    <h2 class="prompt-title">Check if you show up</h2>
+    <p class="prompt-why">See what a buyer sees today. Are you named? Who is, and where does that come from?</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p2')">Copy</button>
+<pre id="p2">What are the best tools for <span class="b">[problem]</span> for <span class="b">[buyer]</span>? Compare the top options, say why each one made your list, and cite your sources.</pre>
+    </div>
+    <p class="tip"><span>Save this answer.</span> You'll compare against it in prompt 07.</p>
+  </section>
+
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">03</span><span class="prompt-tag">Listen</span></div>
+    <h2 class="prompt-title">Pull your buyers' exact words</h2>
+    <p class="prompt-why">The phrases people use on Reddit are the phrases AI repeats. Use them in everything you write.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p3')">Copy</button>
+<pre id="p3">Search r/<span class="b">[subreddit]</span> for posts about <span class="b">[problem]</span>. Quote the exact phrases people use to describe it, word for word, grouped by pain point.</pre>
+    </div>
+  </section>
+
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">04</span><span class="prompt-tag">Rules</span></div>
+    <h2 class="prompt-title">Know the rules before you post</h2>
+    <p class="prompt-why">Most active subreddits gate new accounts. Getting banned on day one costs you the whole channel.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p4')">Copy</button>
+<pre id="p4">Read the rules of r/<span class="b">[subreddit]</span>. Tell me the account age and karma requirements, what counts as self-promotion there, and which kinds of posts get removed.</pre>
+    </div>
+  </section>
+
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">05</span><span class="prompt-tag">Engage</span></div>
+    <h2 class="prompt-title">Write a zero-link comment</h2>
+    <p class="prompt-why">Comments build the karma and trust you need before you post. No links, no brand drops.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p5')">Copy</button>
+<pre id="p5">Find a recent thread in r/<span class="b">[subreddit]</span> about <span class="b">[problem]</span>. Draft a reply as a <span class="b">[your role]</span> who has dealt with this: one real experience, one practical step. No links, no product names, under 120 words, plain tone.</pre>
+    </div>
+    <p class="tip"><span>Edit it into your own words</span> before you post. Reddit can tell.</p>
+  </section>
+
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">06</span><span class="prompt-tag">Publish</span></div>
+    <h2 class="prompt-title">Write a post AI will quote</h2>
+    <p class="prompt-why">Comparisons, troubleshooting and experience posts get cited most. Lead with the answer.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p6')">Copy</button>
+<pre id="p6">Write a Reddit post comparing <span class="b">[option A]</span>, <span class="b">[option B]</span> and <span class="b">[option C]</span> for <span class="b">[use case]</span>, written from first-hand use. Open with a 2-sentence direct answer, then honest pros and cons, then who each option fits. Disclose that I build <span class="b">[product]</span>.</pre>
+    </div>
+  </section>
+
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">07</span><span class="prompt-tag">Measure</span></div>
+    <h2 class="prompt-title">Monthly scorecard</h2>
+    <p class="prompt-why">Once a month, check whether it's working and what to post next.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p7')">Copy</button>
+<pre id="p7">Run prompts 1 and 2 again. Then compare with last month's answers: <span class="b">[paste last month's answers]</span>. Was <span class="b">[product]</span> or any of my posts cited? What changed, and what should I post next?</pre>
+    </div>
+  </section>
+
+  <section class="bridge">
+    <h2>Doing this every day by hand gets old.</h2>
+    <p>Nuureva watches the subreddits your buyers use, finds the threads worth answering and drafts replies in your voice. You stay the one who posts.</p>
+    <a class="btn-primary" href="https://nuureva.com">See how Nuureva works →</a>
+  </section>
+
+  <footer>
+    <div>
+      <div class="foot-name">NUUREVA / Stack Levels</div>
+      <div class="foot-sub">Built in public — nuureva.com · @StackLevels</div>
+    </div>
+    <div class="foot-links">
+      <a href="https://nuureva.com">nuureva.com</a>
+      <a href="https://youtube.com/@StackLevels">youtube.com/@StackLevels</a>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  function copyPrompt(btn, id) {
+    var text = document.getElementById(id).textContent;
+    var done = function () {
+      btn.textContent = 'Copied!';
+      btn.classList.add('done');
+      setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(text); done(); });
+    } else { fallback(text); done(); }
+  }
+  function fallback(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+</script>
+</body>
+</html>
