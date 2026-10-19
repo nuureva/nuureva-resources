@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reply Rules · Stack Levels</title>
+<meta name="description" content="11 checks to run before every Reddit reply, so you help first and stay in the thread.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: rgba(255,255,255,0.035);
+    --surface-hover: rgba(255,255,255,0.055);
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(75,142,241,0.3);
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.62);
+    --text-muted: rgba(240,238,232,0.38);
+    --accent-blue: #4B8EF1;
+    --accent-orange: #E8824A;
+    --green: #3ecf8e;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Lora', serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--body);
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(900px, 100vw);
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(75,142,241,0.065) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 18px 60px;
+  }
+  @media (min-width: 480px) { .main { padding: 40px 24px 70px; } }
+  @media (min-width: 768px) { .main { padding: 56px 40px 80px; } }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-brand {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .page-title {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .page-subtitle {
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 580px;
+    margin-bottom: 20px;
+  }
+  .page-subtitle strong { color: var(--text-primary); font-weight: 500; }
+  .meta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .meta-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .meta-tag span { color: var(--text-secondary); }
+
+  /* ── HOW TO USE ── */
+  .howto {
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 20px 20px 18px;
+    margin-bottom: 40px;
+  }
+  .howto-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent-blue);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .howto ol { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
+  .howto li {
+    counter-increment: s;
+    display: flex;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  .howto li::before {
+    content: counter(s);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 7px;
+    height: fit-content;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .howto strong { color: var(--text-primary); font-weight: 500; }
+  .bracket { color: var(--accent-orange); font-family: var(--mono); font-size: 0.88em; }
+
+  /* ── PROMPT CARDS ── */
+  .prompt {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+  .prompt:last-of-type { border-bottom: none; }
+  .prompt-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .prompt-num {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+  .prompt-tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .prompt-title {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .prompt-why {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .copy-block {
+    position: relative;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .copy-block pre {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 16px 16px 16px;
+    padding-right: 80px;
+  }
+  .copy-block pre .b { color: var(--accent-orange); }
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    background: rgba(75,142,241,0.18);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: rgba(75,142,241,0.3); }
+  .copy-btn.done { background: rgba(62,207,142,0.18); border-color: rgba(62,207,142,0.4); }
+
+  .tip {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .tip span { color: var(--accent-blue); }
+
+  /* ── BRIDGE ── */
+  .bridge {
+    margin-top: 12px;
+    background: linear-gradient(135deg, rgba(75,142,241,0.12), rgba(232,130,74,0.08));
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 24px 20px;
+  }
+  .bridge h2 {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .bridge p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.97rem; }
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    color: #07090f;
+    background: var(--text-primary);
+    border-radius: 6px;
+    padding: 11px 16px;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #ffffff; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .foot-name { font-family: var(--display); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+  .foot-sub { font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em; }
+  .foot-links { display: flex; flex-direction: column; gap: 5px; text-align: right; }
+  .foot-links a { font-family: var(--mono); font-size: 0.67rem; color: var(--accent-blue); text-decoration: none; letter-spacing: 0.04em; }
+  .foot-links a:hover { text-decoration: underline; }
+</style>
+<style>
+  .phase { margin-bottom: 34px; }
+  .phase-head { display:flex; align-items:baseline; gap:10px; margin-bottom:12px; }
+  .phase-tag { font-family: var(--mono); font-size: 0.62rem; color: var(--accent-orange); background: rgba(232,130,74,0.1); border: 1px solid rgba(232,130,74,0.2); border-radius: 3px; padding: 1px 6px; letter-spacing: .08em; text-transform: uppercase; }
+  .phase-title { font-family: var(--display); font-size: 1.25rem; font-weight: 700; }
+  .item { display:flex; gap:14px; align-items:flex-start; background: var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin-bottom:10px; cursor:pointer; transition: background .15s, border-color .15s; }
+  .item:hover { background: var(--surface-hover); }
+  .item input { appearance:none; -webkit-appearance:none; width:20px; height:20px; border:1.5px solid var(--border-accent); border-radius:5px; margin-top:3px; flex-shrink:0; cursor:pointer; display:grid; place-content:center; }
+  .item input:checked { background: var(--accent-blue); border-color: var(--accent-blue); }
+  .item input:checked::after { content:'\2713'; color:#07090f; font-size:13px; font-weight:700; }
+  .item.done { border-color: rgba(62,207,142,0.35); }
+  .item.done .item-title { color: var(--text-secondary); text-decoration: line-through; text-decoration-color: rgba(240,238,232,.3); }
+  .item-num { font-family: var(--mono); font-size: .66rem; color: var(--text-muted); margin-right:6px; }
+  .item-title { font-weight:500; color: var(--text-primary); }
+  .item-why { color: var(--text-secondary); font-size: .93rem; margin-top:2px; }
+  .note { margin-top:8px; font-family: var(--mono); font-size:.7rem; line-height:1.6; color: var(--text-muted); border-left:2px solid var(--accent-orange); padding-left:10px; }
+  .note b { color: var(--accent-orange); font-weight:500; }
+  .progress { position: sticky; top: 0; z-index: 5; background: rgba(7,9,15,.92); backdrop-filter: blur(6px); padding: 12px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--border); }
+  .progress-text { font-family: var(--mono); font-size: .7rem; color: var(--text-secondary); letter-spacing:.05em; margin-bottom:8px; }
+  .bar { height:6px; background: rgba(255,255,255,.06); border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; width:0; background: linear-gradient(90deg, var(--accent-blue), var(--accent-orange)); transition: width .25s; }
+</style>
+</head>
+<body>
+<main class="main">
+
+  <header class="page-header">
+    <div class="page-brand">Stack Levels · nuureva.com</div>
+    <h1 class="page-title"><span style="color:var(--accent-blue)">Reply Rules</span>: 11 checks before every Reddit reply</h1>
+    <p class="page-subtitle">
+      <strong>The reply that gets you banned is about you. The reply that gets you users is about them.</strong> Run these checks before you post, and keep the thread on your side.
+    </p>
+    <div class="meta-row">
+      <div class="meta-tag">CHECKS <span>11</span></div>
+      <div class="meta-tag">USE <span>every Reddit reply</span></div>
+      <div class="meta-tag">BY <span>Carl, @StackLevels</span></div>
+    </div>
+  </header>
+
+  <div class="progress"><div class="progress-text" id="pt">0 of 11 done</div><div class="bar"><div class="bar-fill" id="bf"></div></div></div>
+
+  <section class="phase">
+    <div class="phase-head"><span class="phase-tag">Before you reply</span><h2 class="phase-title">Know the room</h2></div>
+    <label class="item"><input type="checkbox" data-i="1"><div><div class="item-title"><span class="item-num">01</span>Read the subreddit rules.</div><div class="item-why">The sidebar and the pinned posts. Every subreddit sets its own, and they are stricter than Reddit's.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="2"><div><div class="item-title"><span class="item-num">02</span>Check where self-promotion is allowed.</div><div class="item-why">Some subreddits ban it. Some allow it only in a weekly thread. Post where it fits.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="3"><div><div class="item-title"><span class="item-num">03</span>Look at your own history.</div><div class="item-why">If most of what you post is your own links, Reddit reads you as a promoter. Help in a few threads first.</div></div></label>
+  </section>
+  <section class="phase">
+    <div class="phase-head"><span class="phase-tag">The reply</span><h2 class="phase-title">Help first</h2></div>
+    <label class="item"><input type="checkbox" data-i="4"><div><div class="item-title"><span class="item-num">04</span>Answer the question in full.</div><div class="item-why">Give them what they asked for, even if they never click anything.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="5"><div><div class="item-title"><span class="item-num">05</span>Remove your app. Does it still help?</div><div class="item-why">If the reply falls apart without the mention, the mention was the point. Rewrite it.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="6"><div><div class="item-title"><span class="item-num">06</span>Write it for this one person.</div><div class="item-why">Use the details from their post. Never paste the same reply into another thread.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="7"><div><div class="item-title"><span class="item-num">07</span>Say you built it.</div><div class="item-why">"I built this, so I'm biased." Hiding it breaks Reddit's rules and costs you trust.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="8"><div><div class="item-title"><span class="item-num">08</span>Link only if asked or allowed.</div><div class="item-why">Otherwise name the app and let them search for it.</div></div></label>
+  </section>
+  <section class="phase">
+    <div class="phase-head"><span class="phase-tag">After you reply</span><h2 class="phase-title">Stay in the thread</h2></div>
+    <label class="item"><input type="checkbox" data-i="9"><div><div class="item-title"><span class="item-num">09</span>Answer the follow-ups.</div><div class="item-why">Questions under your reply are the warmest leads in the thread. Reply the same day.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="10"><div><div class="item-title"><span class="item-num">10</span>Keep each reply in its own thread.</div><div class="item-why">One good reply, one place. Posting it again elsewhere looks like spam to people and filters.</div></div></label>
+    <label class="item"><input type="checkbox" data-i="11"><div><div class="item-title"><span class="item-num">11</span>Note which thread brought users.</div><div class="item-why">Write down the thread and the date when someone signs up.</div><div class="note"><b>What I learned:</b> my first two paying QurioLens users came after one how-to video and one Reddit mention. I still don't know which one brought them. Track it from day one.</div></div></label>
+  </section>
+
+  <section class="prompt" style="margin-top:8px">
+    <div class="prompt-eyebrow"><span class="prompt-num">PROMPT</span><span class="prompt-tag">Ask Claude</span></div>
+    <h2 class="prompt-title">Draft the reply, then check it</h2>
+    <p class="prompt-why">Paste the thread and the rules. Claude answers first, tells you honestly whether your app belongs in the reply, and flags anything that breaks the rules.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+<pre id="p1">I want to reply to a Reddit thread without breaking the rules.
+
+Subreddit rules:
+<span class="b">[paste the rules]</span>
+
+Thread:
+<span class="b">[paste the post and the top comments]</span>
+
+My product: <span class="b">[one line on what it does]</span>
+
+1. Draft a reply that answers the question in full, without mentioning my product.
+2. Tell me honestly whether my product would help this person. If not, say so.
+3. If it would, add one sentence that mentions it and says I built it.
+4. Check the reply against the rules above and flag anything that breaks them.</pre>
+    </div>
+    <p class="tip">Fill the <span>[brackets]</span>, then read the draft once more in your own voice before you post.</p>
+  </section>
+
+  <section class="bridge">
+    <h2>Finding the right threads is the hard part.</h2>
+    <p>Nuureva finds the places your buyers talk, surfaces the posts asking for what you built and drafts replies that answer first. You keep the final word.</p>
+    <a class="btn-primary" href="https://nuureva.com">See how Nuureva works &rarr;</a>
+  </section>
+
+  <footer>
+    <div>
+      <div class="foot-name">NUUREVA / Stack Levels</div>
+      <div class="foot-sub">Built in public · nuureva.com · @StackLevels</div>
+    </div>
+    <div class="foot-links">
+      <a href="https://nuureva.com">nuureva.com</a>
+      <a href="https://youtube.com/@StackLevels">youtube.com/@StackLevels</a>
+    </div>
+  </footer>
+
+</main>
+<script>
+  function copyPrompt(btn){ var t=document.getElementById('p1').innerText; navigator.clipboard.writeText(t).then(function(){ btn.textContent='Copied'; btn.classList.add('done'); setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('done'); },1600); }); }
+  var KEY='reply-rules-v1', boxes=[].slice.call(document.querySelectorAll('.item input'));
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e) { return []; } }
+  function save(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e) {} }
+  function update(){
+    var on=boxes.filter(function(b){return b.checked;});
+    boxes.forEach(function(b){ b.closest('.item').classList.toggle('done', b.checked); });
+    document.getElementById('pt').textContent = on.length+' of '+boxes.length+' done';
+    document.getElementById('bf').style.width = (on.length/boxes.length*100)+'%';
+    save(on.map(function(b){return b.dataset.i;}));
+  }
+  var saved=load(); boxes.forEach(function(b){ b.checked = saved.indexOf(b.dataset.i)>-1; b.addEventListener('change', update); });
+  update();
+</script>
+</body>
+</html>
