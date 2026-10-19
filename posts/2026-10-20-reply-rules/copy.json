@@ -1,10 +1,10 @@
 {
   "format": "carousel3",
   "slug": "2026-10-20-reply-rules",
-  "size": "3:4",
+  "size": "4:5",
   "fields": {
     "cover_label": " ",
-    "cover_headline": "Reddit replies that get you\n{o:banned} instead of {b:buyers}",
+    "cover_headline": "Reddit replies that\nget you {o:banned}\ninstead of {b:buyers}",
     "cover_sub": "For founders: 4 rules to reply safely",
     "cover_meta": "4 rules",
     "step1_label": "THE REASON",
@@ -26,5 +26,10 @@
     "cta_subtext": "Comment REPLY and I'll DM you the Reply Rules: a checklist to run before every Reddit reply.",
     "cta_button": "Comment REPLY"
   },
-  "x_order": ["cover", "step1", "step3", "cta"]
+  "x_order": [
+    "cover",
+    "step1",
+    "step3",
+    "cta"
+  ]
 }
