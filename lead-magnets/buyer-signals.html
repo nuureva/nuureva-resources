@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buyer Signal Phrase List — Stack Levels</title>
+<meta name="description" content="The top places where people ask for an app like yours, 20 search phrases that surface buying intent, and 2 Claude prompts to find and answer them.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: rgba(255,255,255,0.035);
+    --surface-hover: rgba(255,255,255,0.055);
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(75,142,241,0.3);
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.62);
+    --text-muted: rgba(240,238,232,0.38);
+    --accent-blue: #4B8EF1;
+    --accent-orange: #E8824A;
+    --green: #3ecf8e;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Lora', serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--body);
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(900px, 100vw);
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(75,142,241,0.065) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 18px 60px;
+  }
+  @media (min-width: 480px) { .main { padding: 40px 24px 70px; } }
+  @media (min-width: 768px) { .main { padding: 56px 40px 80px; } }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-brand {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .page-title {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .page-subtitle {
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 580px;
+    margin-bottom: 20px;
+  }
+  .page-subtitle strong { color: var(--text-primary); font-weight: 500; }
+  .meta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .meta-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .meta-tag span { color: var(--text-secondary); }
+
+  /* ── HOW TO USE ── */
+  .howto {
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 20px 20px 18px;
+    margin-bottom: 40px;
+  }
+  .howto-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent-blue);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .howto ol { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
+  .howto li {
+    counter-increment: s;
+    display: flex;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  .howto li::before {
+    content: counter(s);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 7px;
+    height: fit-content;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .howto strong { color: var(--text-primary); font-weight: 500; }
+  .bracket { color: var(--accent-orange); font-family: var(--mono); font-size: 0.88em; }
+
+  /* ── PROMPT CARDS ── */
+  .prompt {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+  .prompt:last-of-type { border-bottom: none; }
+  .prompt-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .prompt-num {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+  .prompt-tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .prompt-title {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .prompt-why {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .copy-block {
+    position: relative;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .copy-block pre {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 16px 16px 16px;
+    padding-right: 80px;
+  }
+  .copy-block pre .b { color: var(--accent-orange); }
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    background: rgba(75,142,241,0.18);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: rgba(75,142,241,0.3); }
+  .copy-btn.done { background: rgba(62,207,142,0.18); border-color: rgba(62,207,142,0.4); }
+
+  .tip {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .tip span { color: var(--accent-blue); }
+
+  /* ── BRIDGE ── */
+  .bridge {
+    margin-top: 12px;
+    background: linear-gradient(135deg, rgba(75,142,241,0.12), rgba(232,130,74,0.08));
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 24px 20px;
+  }
+  .bridge h2 {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .bridge p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.97rem; }
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    color: #07090f;
+    background: var(--text-primary);
+    border-radius: 6px;
+    padding: 11px 16px;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #ffffff; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .foot-name { font-family: var(--display); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+  .foot-sub { font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em; }
+  .foot-links { display: flex; flex-direction: column; gap: 5px; text-align: right; }
+  .foot-links a { font-family: var(--mono); font-size: 0.67rem; color: var(--accent-blue); text-decoration: none; letter-spacing: 0.04em; }
+  .foot-links a:hover { text-decoration: underline; }
+</style>
+
+<style>
+  .section-title { font-family: var(--display); font-size: 1.5rem; font-weight: 800; line-height: 1.15; margin: 8px 0 6px; }
+  .section-lead { color: var(--text-secondary); font-size: 0.97rem; margin-bottom: 22px; }
+  .part { margin-bottom: 44px; }
+  .places { display: grid; gap: 10px; }
+  .place { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .place-name { font-family: var(--mono); font-size: 0.82rem; color: var(--accent-blue); margin-bottom: 4px; }
+  .place-name a { color: inherit; text-decoration: none; }
+  .place-name a:hover { text-decoration: underline; }
+  .place-why { color: var(--text-secondary); font-size: 0.92rem; }
+  .group { margin-bottom: 22px; }
+  .group-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+  .group-title { font-family: var(--display); font-size: 1.1rem; font-weight: 700; }
+  .group-why { color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<main class="main">
+
+  <header class="page-header">
+    <div class="page-brand">Stack Levels — nuureva.com</div>
+    <h1 class="page-title">Buyer <span style="color:var(--accent-blue)">Signal</span> Phrase List</h1>
+    <p class="page-subtitle">
+      <strong>Every day someone asks for an app like yours, in public.</strong> This is where they ask, the exact words they use, and the 2 Claude prompts I use to find those posts and answer them first.
+    </p>
+    <div class="meta-row">
+      <div class="meta-tag">PLACES <span>12</span></div>
+      <div class="meta-tag">PHRASES <span>20</span></div>
+      <div class="meta-tag">PROMPTS <span>2</span></div>
+      <div class="meta-tag">BY <span>Carl — @StackLevels</span></div>
+    </div>
+  </header>
+
+  <section class="howto">
+    <div class="howto-title">How to use</div>
+    <ol>
+      <li><span>Pick <strong>3 places</strong> from Part 1 where your buyers hang out (Prompt 01 helps).</span></li>
+      <li><span>Search each place with the phrases in Part 2. Replace the <span class="bracket">[brackets]</span>, put the phrase in quotes and <strong>sort by new</strong>.</span></li>
+      <li><span>Save every post that fits your app, then paste them into <strong>Prompt 02</strong>.</span></li>
+      <li><span><strong>Answer first. Mention last.</strong> Read each community's rules, disclose that you built it, no link unless they ask.</span></li>
+    </ol>
+  </section>
+
+  <section class="part">
+    <div class="prompt-eyebrow"><span class="prompt-tag">Part 1</span></div>
+    <h2 class="section-title">Top places people ask for an app like yours</h2>
+    <p class="section-lead">Start broad, then narrow to the rooms your exact buyer reads.</p>
+    <div class="places">
+    <div class="place"><div class="place-name"><a href="https://www.reddit.com/r/SaaS/" target="_blank" rel="noopener">r/SaaS ↗</a></div><div class="place-why">Founders and buyers comparing software tools, asking for alternatives.</div></div>
+    <div class="place"><div class="place-name"><a href="https://www.reddit.com/r/startups/" target="_blank" rel="noopener">r/startups ↗</a></div><div class="place-why">Early teams asking what to use for sales, ops and growth.</div></div>
+    <div class="place"><div class="place-name"><a href="https://www.reddit.com/r/Entrepreneur/" target="_blank" rel="noopener">r/Entrepreneur ↗</a></div><div class="place-why">Business owners asking "what do you use for…?" every week.</div></div>
+    <div class="place"><div class="place-name"><a href="https://www.reddit.com/r/smallbusiness/" target="_blank" rel="noopener">r/smallbusiness ↗</a></div><div class="place-why">Owners describing manual work your app could replace.</div></div>
+    <div class="place"><div class="place-name"><a href="https://www.reddit.com/r/software/" target="_blank" rel="noopener">r/software ↗</a></div><div class="place-why">Direct "looking for software that…" requests.</div></div>
+    <div class="place"><div class="place-name"><a href="https://www.reddit.com/r/productivity/" target="_blank" rel="noopener">r/productivity ↗</a></div><div class="place-why">People hunting for a better tool or workflow.</div></div>
+    <div class="place"><div class="place-name">Your niche subreddits</div><div class="place-why">The rooms your exact buyer reads (r/webdev, r/marketing, r/sysadmin, r/realtors…). Prompt 01 below finds yours.</div></div>
+    <div class="place"><div class="place-name"><a href="https://softwarerecs.stackexchange.com/" target="_blank" rel="noopener">Software Recommendations (Stack Exchange) ↗</a></div><div class="place-why">A whole Q&amp;A site of people asking for a tool that does X.</div></div>
+    <div class="place"><div class="place-name"><a href="https://news.ycombinator.com/ask" target="_blank" rel="noopener">Hacker News: Ask HN ↗</a></div><div class="place-why">Technical buyers asking what others use. Answer first, never pitch.</div></div>
+    <div class="place"><div class="place-name"><a href="https://www.indiehackers.com/" target="_blank" rel="noopener">Indie Hackers ↗</a></div><div class="place-why">Founders asking how others solved a problem, and with which tool.</div></div>
+    <div class="place"><div class="place-name"><a href="https://x.com/search?q=%22any%20tool%20for%22&f=live" target="_blank" rel="noopener">X search ↗</a></div><div class="place-why">Search a phrase, set to Latest. Add <span class="b">-filter:links</span> to skip promo posts.</div></div>
+    <div class="place"><div class="place-name"><a href="https://www.linkedin.com/search/results/content/?keywords=%22recommend%20a%20tool%22" target="_blank" rel="noopener">LinkedIn search (Posts) ↗</a></div><div class="place-why">B2B buyers asking their network for recommendations.</div></div>
+    </div>
+  </section>
+
+  <section class="part">
+    <div class="prompt-eyebrow"><span class="prompt-tag">Part 2</span></div>
+    <h2 class="section-title">20 phrases buyers use</h2>
+    <p class="section-lead">Five kinds of buying signal, warmest first. Copy a group, swap in your <span class="bracket">[brackets]</span>, search.</p>
+  <div class="group">
+    <div class="group-head"><span class="prompt-num">01</span><span class="group-title">Recommendation requests</span></div>
+    <p class="group-why">They want a tool right now. The warmest signal.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'g1')">Copy</button>
+<pre id="g1">"any tool for <span class="b">[problem]</span>?"
+"what do you use for <span class="b">[task]</span>?"
+"looking for software that <span class="b">[does X]</span>"
+"can anyone recommend a <span class="b">[category]</span> tool?"</pre>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-head"><span class="prompt-num">02</span><span class="group-title">Alternative hunting</span></div>
+    <p class="group-why">They already pay for something and want out.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'g2')">Copy</button>
+<pre id="g2">"alternatives to <span class="b">[competitor]</span>?"
+"switching from <span class="b">[competitor]</span>"
+"<span class="b">[competitor]</span> vs"
+"something like <span class="b">[competitor]</span> but <span class="b">[cheaper / simpler]</span>"</pre>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-head"><span class="prompt-num">03</span><span class="group-title">Competitor complaints</span></div>
+    <p class="group-why">Pain with the current tool. Help first, mention yours last.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'g3')">Copy</button>
+<pre id="g3">"<span class="b">[competitor]</span> is too expensive"
+"<span class="b">[competitor]</span> keeps breaking"
+"frustrated with <span class="b">[competitor]</span>"
+"cancelled <span class="b">[competitor]</span>"</pre>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-head"><span class="prompt-num">04</span><span class="group-title">Pain questions</span></div>
+    <p class="group-why">They have the problem but haven't named a tool yet.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'g4')">Copy</button>
+<pre id="g4">"how do you handle <span class="b">[task]</span>?"
+"is there a way to <span class="b">[do X]</span>?"
+"how do you keep track of <span class="b">[thing]</span>?"
+"what's the best way to <span class="b">[task]</span>?"</pre>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-head"><span class="prompt-num">05</span><span class="group-title">Workaround posts</span></div>
+    <p class="group-why">They built a manual fix. Your app replaces it.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'g5')">Copy</button>
+<pre id="g5">"I use a spreadsheet to <span class="b">[task]</span>"
+"I do <span class="b">[task]</span> by hand every <span class="b">[week]</span>"
+"my workaround for <span class="b">[problem]</span>"
+"is there an easier way to <span class="b">[task]</span>?"</pre>
+    </div>
+  </div>
+  </section>
+
+  <div class="prompt-eyebrow" style="margin-bottom:6px"><span class="prompt-tag">Part 3</span></div>
+  <h2 class="section-title" style="margin-bottom:22px">2 Claude prompts</h2>
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">01</span><span class="prompt-tag">Find</span></div>
+    <h2 class="prompt-title">Find your top places</h2>
+    <p class="prompt-why">Run this once to get your own list of rooms, then keep the best three.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p01')">Copy</button>
+<pre id="p01">I sell <span class="b">[product]</span>, a <span class="b">[category]</span> for <span class="b">[buyer]</span>. Search the web and list the 10 places online where my buyers ask for tool recommendations: subreddits, forums, communities and Q&amp;A sites. For each place, show 2 recent example posts with links and say how active it is. Rank them by how often people ask for a tool like mine.</pre>
+    </div>
+  </section>
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">02</span><span class="prompt-tag">Sort</span></div>
+    <h2 class="prompt-title">Sort the signals</h2>
+    <p class="prompt-why">Paste in the posts you saved. Claude keeps the ones worth answering today.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p02')">Copy</button>
+<pre id="p02">I sell <span class="b">[product]</span>, which helps <span class="b">[buyer]</span> with <span class="b">[problem]</span>. Below are posts I saved from my searches. Rank them by buying intent: who is asking for a tool right now, who is unhappy with a competitor, who has the problem but no tool. Keep the top 5. For each one, write the reason in one line and draft a reply that solves their problem first and mentions my product only if it truly fits, with a short disclosure that I built it. No links.
+
+Posts:
+<span class="b">[paste posts]</span></pre>
+    </div>
+  </section>
+
+  <section class="bridge">
+    <h2>Searching every day by hand gets old.</h2>
+    <p>That's why I'm building Nuureva: it watches the places your buyers ask, flags the posts with buying intent and drafts replies in your voice. You stay the one who posts.</p>
+    <a class="btn-primary" href="https://nuureva.com">See how Nuureva works →</a>
+  </section>
+
+  <footer>
+    <div>
+      <div class="foot-name">NUUREVA / Stack Levels</div>
+      <div class="foot-sub">Built in public — nuureva.com · @StackLevels</div>
+    </div>
+    <div class="foot-links">
+      <a href="https://nuureva.com">nuureva.com</a>
+      <a href="https://youtube.com/@StackLevels">youtube.com/@StackLevels</a>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  function copyPrompt(btn, id) {
+    var text = document.getElementById(id).textContent;
+    var done = function () {
+      btn.textContent = 'Copied!';
+      btn.classList.add('done');
+      setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(text); done(); });
+    } else { fallback(text); done(); }
+  }
+  function fallback(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+</script>
+</body>
+</html>
