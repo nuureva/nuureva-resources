@@ -1,0 +1,30 @@
+{
+  "format": "carousel3",
+  "slug": "2026-10-20-reply-rules",
+  "size": "3:4",
+  "fields": {
+    "cover_label": " ",
+    "cover_headline": "Reddit replies that get you\n{o:banned} instead of {b:buyers}",
+    "cover_sub": "For founders: 4 rules to reply safely",
+    "cover_meta": "4 rules",
+    "step1_label": "THE REASON",
+    "step1_heading": "The reply is about {o:you}",
+    "step1_body": "Reddit flags accounts that\nmostly post their own links.\nBuyers want answers, not ads.\nThe 4 Reply Rules:",
+    "step2_label": "RULE 01 / 04",
+    "step2_heading": "Answer before you {b:link}",
+    "step2_body": "Gets you {o:BANNED}:\n\"Try my app\" + a link.\nGets you {b:USERS}:\nA full answer. App comes later.",
+    "step3_label": "RULE 02 / 04",
+    "step3_heading": "Say you {b:built it}",
+    "step3_body": "Gets you {o:BANNED}:\nPraising it like a fan.\nGets you {b:USERS}:\n\"I built this, so I'm biased.\"",
+    "step4_label": "RULE 03 / 04",
+    "step4_heading": "Write {b:one} reply, not ten",
+    "step4_body": "Gets you {o:BANNED}:\nThe same reply in 10 threads.\nGets you {b:USERS}:\nOne reply for the person asking.",
+    "step5_label": "RULE 04 / 04",
+    "step5_heading": "Read the {b:rules} first",
+    "step5_body": "Gets you {o:BANNED}:\nPosting, then reading rules.\nGets you {b:USERS}:\nReading the sidebar first.",
+    "cta_headline": "You want {b:buyers}, not bans.",
+    "cta_subtext": "Comment REPLY and I'll DM you the Reply Rules: a checklist to run before every Reddit reply.",
+    "cta_button": "Comment REPLY"
+  },
+  "x_order": ["cover", "step1", "step3", "cta"]
+}

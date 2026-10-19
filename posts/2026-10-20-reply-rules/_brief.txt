@@ -1,0 +1,8 @@
+Post: Reddit replies that get you banned instead of buyers
+Slot: IG + X Tue Oct 20 11 AM; LinkedIn PDF Wed Oct 21 8 AM
+Job: drive signups. Keyword REPLY -> Reply Rules (lead-magnets/reply-rules.html, offer reply-rules)
+Reader: founders who want to reply on Reddit but fear a ban
+Promise: 4 rules that turn a banned reply into one that gets buyers
+Format: carousel3 (code-only), cover via cover_hud.py --fx split (banned vs buyers)
+Color lanes: orange = gets you banned, blue = gets you users
+Order: cover, reason, rule 1-4, cta. X set: cover, reason, rule 2, cta
