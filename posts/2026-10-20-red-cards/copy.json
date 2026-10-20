@@ -1,0 +1,26 @@
+{
+  "format": "redcard",
+  "slug": "2026-10-20-red-cards",
+  "fields": {
+    "cover_headline": "4 distribution habits that deserve a {r:red card}",
+    "cover_sub": "For founders whose app nobody finds.",
+    "step1_label": "THE REASON", "step1_card": "ghost",
+    "step1_heading": "They all {o:wait} for buyers",
+    "step1_body": "Each habit waits for buyers to find you.\nBuyers don't search for apps they don't know.\nThey ask for help in public instead.\nHere's the first card.",
+    "step2_label": "RED CARD 01 / 04",
+    "step2_heading": "Launching once, then {o:silence}",
+    "step2_body": "Launch day gets likes. Then the feed moves on.\nPost something useful every day after.\nI learned this with my first app.\nThe next card gets you banned.",
+    "step3_label": "RED CARD 02 / 04",
+    "step3_heading": "Dropping your {o:link}",
+    "step3_body": "A link with no answer reads like an ad.\nAnswer the question in full first.\nLink only if they ask.\nBut first, find the right threads.",
+    "step4_label": "RED CARD 03 / 04",
+    "step4_heading": "Waiting to be {o:searched}",
+    "step4_body": "Nobody searches for an app they don't know.\nThey describe the problem instead.\nSearch for the problem, not your name.\nI broke the last card myself.",
+    "step5_label": "RED CARD 04 / 04",
+    "step5_heading": "Not asking {o:where} they came from",
+    "step5_body": "My first 2 paying users found me.\nI still don't know how.\nAsk every new user where they found you.\nThen do more of that.",
+    "cta_headline": "Built it. Nobody {o:finds} it?",
+    "cta_subtext": "Send this to a founder holding one of these cards. Follow for one distribution move a day.",
+    "cta_button": "Follow @stacklevels"
+  }
+}
