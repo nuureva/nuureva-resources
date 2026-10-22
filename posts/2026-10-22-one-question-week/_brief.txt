@@ -5,12 +5,11 @@ Job: drive signups. Keyword WEEK -> One Question, Five Posts: 5 Claude Prompts (
 Reader: founders with an app who never know what to post
 Promise: turn one real buyer question into five posts for the week
 Format: carousel4 (light, code-only), 4:5. Cover: cover_hud.py --fx branch --region 122,330,958,700 (static cover for X/LinkedIn = cover_static.png).
-Cover: cover_hud.py; idea: one glass card splits into five
 Order: cover, reason, step 1-4, cta. X set: cover, reason, step 2, cta
 Caps: Reddit not named (2/week reached); no benched advice lines; no empty-audience story
 
 Scene ideas (code-only, for HUD/visual hints):
-- Cover: one glass card splits into five
+- Cover: question bar branches into five weekday cards
 - Reason: a single question card, lit
 - Step 1: inbox and review cards, one highlighted
 - Step 2: five day tiles
