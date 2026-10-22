@@ -1,0 +1,21 @@
+Post: Out of content ideas? Check what your buyers ask.
+Slot: IG + X Thu Oct 22 11 AM; LinkedIn PDF Mon Oct 26 8 AM
+Lane: L4 Content that attracts buyers. Angle: turn one buyer question into a week of posts
+Job: drive signups. Keyword WEEK -> One Question, Five Posts: 5 Claude Prompts (lead-magnets/one-question-week.html, offer one-question-week)
+Reader: founders with an app who never know what to post
+Promise: turn one real buyer question into five posts for the week
+Format: carousel3 (code-only), 4:5 on all platforms. Last carousel was redcard, so format rotates.
+Cover: cover_hud.py; idea: one glass card splits into five
+Order: cover, reason, step 1-4, cta. X set: cover, reason, step 2, cta
+Caps: Reddit not named (2/week reached); no benched advice lines; no empty-audience story
+
+Scene ideas (code-only, for HUD/visual hints):
+- Cover: one glass card splits into five
+- Reason: a single question card, lit
+- Step 1: inbox and review cards, one highlighted
+- Step 2: five day tiles
+- Step 3: draft cards stacking
+- Step 4: one card gains a gold detail
+- CTA: button "Comment WEEK"
+
+Claim check: no factual claims; every line is an instruction.

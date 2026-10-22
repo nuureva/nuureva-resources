@@ -1,0 +1,35 @@
+{
+  "format": "carousel3",
+  "slug": "2026-10-22-one-question-week",
+  "size": "4:5",
+  "fields": {
+    "cover_label": "FOUNDERS",
+    "cover_headline": "Out of content ideas?\nCheck what your\nbuyers {o:ask}.",
+    "cover_sub": "One buyer question. A week of posts.",
+    "cover_meta": "4 steps",
+    "step1_label": "THE REASON",
+    "step1_heading": "Every buyer question\nis a {o:post}",
+    "step1_body": "A buyer asked it in their words.\nUse their words, not yours.\nOne question holds five posts.\nHere's how to find yours.",
+    "step2_label": "STEP 01 / 04",
+    "step2_heading": "Find one {b:real} question",
+    "step2_body": "Check your support inbox.\nRead a competitor's reviews.\nCopy their exact words.\nThen take it apart.",
+    "step3_label": "STEP 02 / 04",
+    "step3_heading": "Split it into five {o:angles}",
+    "step3_body": "Mon: answer. Tue: the mistake.\nWed: your story. Thu: the myth.\nFri: the steps.\nFive posts. One draft away.",
+    "step4_label": "STEP 03 / 04",
+    "step4_heading": "Let {b:Claude} draft, you edit",
+    "step4_body": "Paste the question in Claude.\nAsk for one post per angle.\nTell it: keep their wording.\nThen add what only you know.",
+    "step5_label": "STEP 04 / 04",
+    "step5_heading": "Add what only {o:you} know",
+    "step5_body": "A number from your product.\nA moment you watched happen.\nA mistake you made first.\nWant all five prompts?",
+    "cta_headline": "I never know what to post.",
+    "cta_subtext": "Comment WEEK and I'll DM you the 5 Claude prompts that turn one buyer question into a week of posts.",
+    "cta_button": "Comment WEEK"
+  },
+  "x_order": [
+    "cover",
+    "step1",
+    "step3",
+    "cta"
+  ]
+}

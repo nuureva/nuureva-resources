@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Question, Five Posts · Stack Levels</title>
+<meta name="description" content="5 Claude prompts that turn one real buyer question into a week of posts that sound like your buyers.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: rgba(255,255,255,0.035);
+    --surface-hover: rgba(255,255,255,0.055);
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(75,142,241,0.3);
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.62);
+    --text-muted: rgba(240,238,232,0.38);
+    --accent-blue: #4B8EF1;
+    --accent-orange: #E8824A;
+    --green: #3ecf8e;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Lora', serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--body);
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(900px, 100vw);
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(75,142,241,0.065) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 18px 60px;
+  }
+  @media (min-width: 480px) { .main { padding: 40px 24px 70px; } }
+  @media (min-width: 768px) { .main { padding: 56px 40px 80px; } }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-brand {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .page-title {
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .page-subtitle {
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 580px;
+    margin-bottom: 20px;
+  }
+  .page-subtitle strong { color: var(--text-primary); font-weight: 500; }
+  .meta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .meta-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .meta-tag span { color: var(--text-secondary); }
+
+  /* ── HOW TO USE ── */
+  .howto {
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 20px 20px 18px;
+    margin-bottom: 40px;
+  }
+  .howto-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent-blue);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .howto ol { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
+  .howto li {
+    counter-increment: s;
+    display: flex;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  .howto li::before {
+    content: counter(s);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 7px;
+    height: fit-content;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .howto strong { color: var(--text-primary); font-weight: 500; }
+  .bracket { color: var(--accent-orange); font-family: var(--mono); font-size: 0.88em; }
+
+  /* ── PROMPT CARDS ── */
+  .prompt {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+  }
+  .prompt:last-of-type { border-bottom: none; }
+  .prompt-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .prompt-num {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.2);
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+  .prompt-tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .prompt-title {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .prompt-why {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .copy-block {
+    position: relative;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .copy-block pre {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 16px 16px 16px;
+    padding-right: 80px;
+  }
+  .copy-block pre .b { color: var(--accent-orange); }
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    background: rgba(75,142,241,0.18);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: rgba(75,142,241,0.3); }
+  .copy-btn.done { background: rgba(62,207,142,0.18); border-color: rgba(62,207,142,0.4); }
+
+  .tip {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .tip span { color: var(--accent-blue); }
+
+  /* ── BRIDGE ── */
+  .bridge {
+    margin-top: 12px;
+    background: linear-gradient(135deg, rgba(75,142,241,0.12), rgba(232,130,74,0.08));
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 24px 20px;
+  }
+  .bridge h2 {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .bridge p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.97rem; }
+  .btn-primary {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    color: #07090f;
+    background: var(--text-primary);
+    border-radius: 6px;
+    padding: 11px 16px;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #ffffff; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .foot-name { font-family: var(--display); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+  .foot-sub { font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em; }
+  .foot-links { display: flex; flex-direction: column; gap: 5px; text-align: right; }
+  .foot-links a { font-family: var(--mono); font-size: 0.67rem; color: var(--accent-blue); text-decoration: none; letter-spacing: 0.04em; }
+  .foot-links a:hover { text-decoration: underline; }
+</style>
+
+<style>
+  .section-title { font-family: var(--display); font-size: 1.5rem; font-weight: 800; line-height: 1.15; margin: 8px 0 22px; }
+  .note { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 8px 0 30px; }
+  .note-title { font-family: var(--mono); font-size: 0.68rem; color: var(--accent-orange); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .note p { color: var(--text-secondary); font-size: 0.97rem; }
+</style>
+</head>
+<body>
+<main class="main">
+
+  <header class="page-header">
+    <div class="page-brand">Stack Levels · nuureva.com</div>
+    <h1 class="page-title">One <span style="color:var(--accent-orange)">Question</span>, Five <span style="color:var(--accent-blue)">Posts</span></h1>
+    <p class="page-subtitle">
+      <strong>Your buyers already told you what to post.</strong> Paste one real question into these 5 Claude prompts and get a week of posts, Monday to Friday, in your buyer's own words.
+    </p>
+    <div class="meta-row">
+      <div class="meta-tag">PROMPTS <span>5</span></div>
+      <div class="meta-tag">USE <span>Claude</span></div>
+      <div class="meta-tag">BY <span>Carl · @StackLevels</span></div>
+    </div>
+  </header>
+
+  <section class="howto">
+    <div class="howto-title">How to use</div>
+    <ol>
+      <li><span><strong>Find one real question.</strong> Check your support inbox or read a competitor's reviews. Copy the buyer's exact words.</span></li>
+      <li><span>Fill the <span class="bracket">[brackets]</span> once: your product, your buyer, the problem, the question.</span></li>
+      <li><span>Run one prompt per day, Monday to Friday, in the same Claude chat.</span></li>
+      <li><span><strong>Add what only you know</strong> at each <span class="bracket">[MY DETAIL]</span>: a number from your product, a moment you watched happen, a mistake you made first.</span></li>
+    </ol>
+  </section>
+
+  <h2 class="section-title">5 Claude prompts, one per day</h2>
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">01</span><span class="prompt-tag">Mon · Answer</span></div>
+    <h2 class="prompt-title">The straight answer</h2>
+    <p class="prompt-why">Answer the question fully, as if they never click anything else.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p01')">Copy</button>
+<pre id="p01">I sell <span class="b">[product]</span>, which helps <span class="b">[buyer]</span> with <span class="b">[problem]</span>. A buyer asked this, in their own words:
+"<span class="b">[paste the exact question]</span>"
+
+Write a post that answers it fully and directly. Start with the question as the first line, then the answer. Do not mention my product.
+
+Keep their wording where you can. Plain words, short lines, one idea per line. No hashtags, no hype. Leave a gap marked [MY DETAIL] where I add a number, a moment or a mistake of my own.</pre>
+    </div>
+  </section>
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">02</span><span class="prompt-tag">Tue · Mistake</span></div>
+    <h2 class="prompt-title">The mistake behind it</h2>
+    <p class="prompt-why">Name the wrong move behind the question, kindly.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p02')">Copy</button>
+<pre id="p02">I sell <span class="b">[product]</span>, which helps <span class="b">[buyer]</span> with <span class="b">[problem]</span>. A buyer asked this, in their own words:
+"<span class="b">[paste the exact question]</span>"
+
+Write a post about the mistake that usually leads someone to ask this. Name the mistake, show what it costs, then show the better move. No blame.
+
+Keep their wording where you can. Plain words, short lines, one idea per line. No hashtags, no hype. Leave a gap marked [MY DETAIL] where I add a number, a moment or a mistake of my own.</pre>
+    </div>
+  </section>
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">03</span><span class="prompt-tag">Wed · Story</span></div>
+    <h2 class="prompt-title">Your story with it</h2>
+    <p class="prompt-why">Your own run-in with the same problem. Claude leaves the gap; you fill it.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p03')">Copy</button>
+<pre id="p03">I sell <span class="b">[product]</span>, which helps <span class="b">[buyer]</span> with <span class="b">[problem]</span>. A buyer asked this, in their own words:
+"<span class="b">[paste the exact question]</span>"
+
+Write a short story post about the moment I hit this same problem and what I changed. Use [MY DETAIL] for every fact about me, so I fill in only what is true. End with the lesson in one line.
+
+Keep their wording where you can. Plain words, short lines, one idea per line. No hashtags, no hype. Leave a gap marked [MY DETAIL] where I add a number, a moment or a mistake of my own.</pre>
+    </div>
+    <p class="tip">Fill every <span>[MY DETAIL]</span> with something that really happened. Delete any line you can't fill.</p>
+  </section>
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">04</span><span class="prompt-tag">Thu · Myth</span></div>
+    <h2 class="prompt-title">The myth around it</h2>
+    <p class="prompt-why">The belief that keeps people stuck, and what's true instead.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p04')">Copy</button>
+<pre id="p04">I sell <span class="b">[product]</span>, which helps <span class="b">[buyer]</span> with <span class="b">[problem]</span>. A buyer asked this, in their own words:
+"<span class="b">[paste the exact question]</span>"
+
+Write a post that names the common belief behind this question, says plainly why it doesn't hold, and gives the reader what to do instead.
+
+Keep their wording where you can. Plain words, short lines, one idea per line. No hashtags, no hype. Leave a gap marked [MY DETAIL] where I add a number, a moment or a mistake of my own.</pre>
+    </div>
+  </section>
+  <section class="prompt">
+    <div class="prompt-eyebrow"><span class="prompt-num">05</span><span class="prompt-tag">Fri · Steps</span></div>
+    <h2 class="prompt-title">The steps</h2>
+    <p class="prompt-why">Close the week with something they can do today.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p05')">Copy</button>
+<pre id="p05">I sell <span class="b">[product]</span>, which helps <span class="b">[buyer]</span> with <span class="b">[problem]</span>. A buyer asked this, in their own words:
+"<span class="b">[paste the exact question]</span>"
+
+Write a how-to post: 3 to 5 numbered steps that solve the problem in the question. Each step is one line the reader can act on. Mention my product only if one step truly needs a tool, and say I built it.
+
+Keep their wording where you can. Plain words, short lines, one idea per line. No hashtags, no hype. Leave a gap marked [MY DETAIL] where I add a number, a moment or a mistake of my own.</pre>
+    </div>
+  </section>
+
+  <section class="note">
+    <div class="note-title">What I learned</div>
+    <p>My most expensive mistake with my first app was not posting about it earlier. Don't wait for the perfect idea. Start with one buyer question this week.</p>
+  </section>
+
+  <section class="bridge">
+    <h2>Finding a fresh question every week takes reading.</h2>
+    <p>That's why I'm building Nuureva: it watches where your buyers talk, surfaces the questions they ask and turns them into post ideas. You still write the posts.</p>
+    <a class="btn-primary" href="https://nuureva.com">See how Nuureva works →</a>
+  </section>
+
+  <footer>
+    <div>
+      <div class="foot-name">NUUREVA / Stack Levels</div>
+      <div class="foot-sub">Built in public · nuureva.com · @StackLevels</div>
+    </div>
+    <div class="foot-links">
+      <a href="https://nuureva.com">nuureva.com</a>
+      <a href="https://youtube.com/@StackLevels">youtube.com/@StackLevels</a>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  function copyPrompt(btn, id) {
+    var text = document.getElementById(id).textContent;
+    var done = function () {
+      btn.textContent = 'Copied!';
+      btn.classList.add('done');
+      setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(text); done(); });
+    } else { fallback(text); done(); }
+  }
+  function fallback(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+</script>
+</body>
+</html>
