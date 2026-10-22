@@ -4,7 +4,7 @@ Lane: L4 Content that attracts buyers. Angle: turn one buyer question into a wee
 Job: drive signups. Keyword WEEK -> One Question, Five Posts: 5 Claude Prompts (lead-magnets/one-question-week.html, offer one-question-week)
 Reader: founders with an app who never know what to post
 Promise: turn one real buyer question into five posts for the week
-Format: carousel3 (code-only), 4:5 on all platforms. Last carousel was redcard, so format rotates.
+Format: carousel4 (light, code-only), 4:5. Cover: cover_hud.py --fx branch --region 122,330,958,700 (static cover for X/LinkedIn = cover_static.png).
 Cover: cover_hud.py; idea: one glass card splits into five
 Order: cover, reason, step 1-4, cta. X set: cover, reason, step 2, cta
 Caps: Reddit not named (2/week reached); no benched advice lines; no empty-audience story
