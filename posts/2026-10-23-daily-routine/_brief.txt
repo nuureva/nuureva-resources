@@ -1,0 +1,4 @@
+Job: signups. Keyword SIGNALS (reuses Buyer Signal Phrase List, offer buyer-signals).
+Reader: built an app, no daily plan to sell it. Lane L5 Habits, angle "A small daily distribution routine".
+Format: carousel3 (code-only). Cover: cover_hud --fx rules (daily streak board, rows search|save|reply|write down).
+X set: cover, reason, move 1, CTA.

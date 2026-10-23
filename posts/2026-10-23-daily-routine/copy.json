@@ -1,0 +1,28 @@
+{
+  "format": "carousel3",
+  "slug": "2026-10-23-daily-routine",
+  "fields": {
+    "cover_label": " ",
+    "cover_headline": "Your daily distribution routine, in {o:4 moves}",
+    "cover_sub": "You shipped it fast. Find buyers faster.",
+    "cover_meta": "4 moves",
+    "step1_label": "THE REASON",
+    "step1_heading": "Buyers don't wait for your {b:launch}",
+    "step1_body": "They ask for tools in public,\nevery day.\nA launch only catches one\nof those days.\nA routine catches the rest.\nMove 1 starts with\na free phrase list.",
+    "step2_label": "MOVE 01 / 04",
+    "step2_heading": "Search one {o:buyer phrase}",
+    "step2_body": "Pick one: \"any tool for...\"\nor \"alternatives to...\"\nAdd the problem your app solves.\nSearch it where your buyers post.\nThen read what comes back.",
+    "step3_label": "MOVE 02 / 04",
+    "step3_heading": "Save the {b:fresh} threads",
+    "step3_body": "Skip anything old\nor already answered.\nKeep the posts where\nsomeone still asks.\nThose are today's buyers.\nNext: say something useful.",
+    "step4_label": "MOVE 03 / 04",
+    "step4_heading": "Reply to {o:one}",
+    "step4_body": "One good reply beats\nten rushed ones.\nHelp with the exact\nproblem they named.\nSay you built a tool\nif you mention it.\nThen keep what they said.",
+    "step5_label": "MOVE 04 / 04",
+    "step5_heading": "Write down their {b:words}",
+    "step5_body": "Copy the exact phrase\nthey used.\nThat's your next search.\nAnd the opening line\nof your next post.\nTomorrow, start again\nat move 1.",
+    "cta_headline": "You built it. Now what, daily?",
+    "cta_subtext": "Comment SIGNALS and I'll DM you the Buyer Signal Phrase List: the phrases to search in move 1.",
+    "cta_button": "Comment SIGNALS"
+  }
+}
