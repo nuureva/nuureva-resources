@@ -1,0 +1,8 @@
+{
+  "format": "quote",
+  "slug": "2026-10-24-reply-readers",
+  "fields": {
+    "bg": "charcoal",
+    "quote": "You answer {o:one}.\nThe {b:whole thread}\nreads it."
+  }
+}

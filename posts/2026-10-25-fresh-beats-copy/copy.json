@@ -1,0 +1,26 @@
+{
+  "format": "carousel3",
+  "slug": "2026-10-25-fresh-beats-copy",
+  "fields": {
+    "cover_label": " ",
+    "cover_headline": "Same card. Same price. Only one got {o:views}.",
+    "cover_sub": "Why a copy of your old post gets ignored.",
+    "cover_meta": "1 test",
+    "step1_label": "THE TEST",
+    "step1_heading": "I tested it on my own {b:store}",
+    "step1_body": "I sell postcards on eBay.\n\"Sell similar\" copies\nan old listing.\nA fresh listing starts\nfrom zero.\nSame cards. Two ways to list.",
+    "step2_label": "THE RESULT",
+    "step2_heading": "{o:Fresh} listings got the push",
+    "step2_body": "The copies sat still.\nThe fresh ones got shown.\nSame card. Same price.\nSo what does that mean\nfor your app?",
+    "step3_label": "THE LESSON",
+    "step3_heading": "Your launch post is a {b:copy}",
+    "step3_body": "Reposting it word for word\nis \"sell similar\"\nfor your app.\nGive the feed something new.\nEvery single time.",
+    "step4_label": "DO THIS",
+    "step4_heading": "Same product, {o:new} angle",
+    "step4_body": "One buyer question per post.\nOne new detail each time.\nA fix, a number,\na user's words.\nThe product stays.\nThe angle moves.",
+    "cta_headline": "You keep reposting. It keeps sinking.",
+    "cta_subtext": "Follow for more tests from my own store and my own app.",
+    "cta_button": "Follow @stacklevels"
+  },
+  "order": ["cover","step1","step2","step3","step4","cta"]
+}

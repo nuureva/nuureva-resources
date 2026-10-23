@@ -1,0 +1,27 @@
+{
+  "format": "carousel4",
+  "slug": "2026-10-24-feels-salesy",
+  "fields": {
+    "cover_label": " ",
+    "cover_headline": "Why replying to buyers feels {o:salesy}",
+    "cover_sub": "You'd rather be ignored than seen as spam.",
+    "step1_label": "THE REASON",
+    "step1_heading": "It's pitching where nobody {b:asked}",
+    "step1_body": "Spam lands on someone busy.\nA reply lands on someone asking.\nSame words. Different room.\nSo it starts with\nwhere you reply.",
+    "step2_label": "MOVE 01 / 04",
+    "step2_heading": "Reply only where someone {o:asked}",
+    "step2_body": "Look for \"any tool for...\"\nor \"how do you handle...\"\nNo question, no reply.\nThen read how they said it.",
+    "step3_label": "MOVE 02 / 04",
+    "step3_heading": "Use their {b:words}",
+    "step3_body": "Say their problem back\nin the words they used.\nThey feel heard first.\nThen they want the answer.",
+    "step4_label": "MOVE 03 / 04",
+    "step4_heading": "Answer like a {o:friend}",
+    "step4_body": "Tell them what you'd do.\nName other tools that work too.\nHonest beats complete.\nYour app comes last.",
+    "step5_label": "MOVE 04 / 04",
+    "step5_heading": "Mention yours {b:last}",
+    "step5_body": "One line, at the end.\nAs one option, not the answer.\nIf it fits, they'll find you.\nIf not, you still helped.",
+    "cta_headline": "You'd rather stay quiet. Don't.",
+    "cta_subtext": "Comment REPLY and I'll DM you the Reply Rules: what to check before you post in any thread.",
+    "cta_button": "Comment REPLY"
+  }
+}
