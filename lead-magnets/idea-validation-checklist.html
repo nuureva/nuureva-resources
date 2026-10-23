@@ -156,6 +156,19 @@
     line-height: 1.65;
   }
 
+
+  /* The 5 I check first (C006 Short) */
+  .first5 { border: 1px solid rgba(232,130,74,0.28); background: rgba(232,130,74,0.05); border-radius: 10px; padding: 18px 18px 8px; margin-bottom: 20px; }
+  @media (min-width: 480px) { .first5 { padding: 22px 24px 10px; } }
+  .first5-label { font-family: var(--mono); font-size: 0.7rem; color: var(--accent-orange); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .first5-intro { font-size: 0.98rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; }
+  .first5-item { display: grid; grid-template-columns: 34px 1fr; gap: 4px 10px; padding: 12px 0; border-top: 1px solid var(--border); text-decoration: none; color: inherit; }
+  .first5-num { font-family: var(--mono); font-size: 0.8rem; color: var(--accent-orange); padding-top: 3px; }
+  .first5-title { font-family: var(--display); font-weight: 700; font-size: 1.02rem; color: var(--text-primary); }
+  .first5-check { grid-column: 2; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.55; }
+  .first5-go { grid-column: 2; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; color: var(--accent-blue); margin-top: 2px; }
+  .first5-item:hover .first5-go { text-decoration: underline; }
+
   /* Section — accordion */
   .section {
     margin-bottom: 8px;
@@ -440,6 +453,42 @@
       <div class="meta-item">BUILT BY <span>Carl — @StackLevels</span></div>
     </div>
   </header>
+
+
+  <div class="first5" id="first-five">
+    <div class="first5-label">The 5 I check first</div>
+    <p class="first5-intro">These are the five things I confirm before I build anything. Start here. If all five hold up, run the full 28 questions below to go deeper.</p>
+    <a class="first5-item" href="#section-3" onclick="return goSection('section-3')">
+      <div class="first5-num">01</div>
+      <div class="first5-title">Who the buyer is</div>
+      <div class="first5-check">Describe them in one sentence: their situation and what they are trying to get done.</div>
+      <div class="first5-go">Go deeper: section 03 Who Pays &rarr;</div>
+    </a>
+    <a class="first5-item" href="#section-7" onclick="return goSection('section-7')">
+      <div class="first5-num">02</div>
+      <div class="first5-title">Where they already talk</div>
+      <div class="first5-check">Name 3 places where they spend time right now: subreddits, forums, groups, newsletters.</div>
+      <div class="first5-go">Go deeper: section 07 Distribution Path &rarr;</div>
+    </a>
+    <a class="first5-item" href="#section-2" onclick="return goSection('section-2')">
+      <div class="first5-num">03</div>
+      <div class="first5-title">The words they use</div>
+      <div class="first5-check">Find 5 real posts where they describe the problem. Keep their exact words, not yours.</div>
+      <div class="first5-go">Go deeper: section 02 Evidence of Demand &rarr;</div>
+    </a>
+    <a class="first5-item" href="#section-4" onclick="return goSection('section-4')">
+      <div class="first5-num">04</div>
+      <div class="first5-title">What they use today</div>
+      <div class="first5-check">List the tools and workarounds they use now, and what they complain about in them.</div>
+      <div class="first5-go">Go deeper: section 04 Competition Audit &rarr;</div>
+    </a>
+    <a class="first5-item" href="#section-3" onclick="return goSection('section-3')">
+      <div class="first5-num">05</div>
+      <div class="first5-title">Will they pay</div>
+      <div class="first5-check">Check whether they already spend money on this problem, and what moment makes them ready to pay.</div>
+      <div class="first5-go">Go deeper: section 03 Who Pays &rarr;</div>
+    </a>
+  </div>
 
   <div class="how-to-use">
     <div class="how-to-use-label">How to use this</div>
@@ -800,6 +849,14 @@
 
 <script>
   var sectionIds = ['section-1','section-2','section-3','section-4','section-5','section-6','section-7'];
+
+
+  function goSection(id) {
+    var el = document.getElementById(id);
+    if (!el.classList.contains('open')) toggleSection(id);
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return false;
+  }
 
   function toggleSection(id) {
     var clicked = document.getElementById(id);
