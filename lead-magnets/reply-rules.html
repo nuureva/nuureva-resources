@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reply Rules · Stack Levels</title>
-<meta name="description" content="11 checks to run before every Reddit reply, so you help first and stay in the thread.">
+<meta name="description" content="11 checks to run before every Reddit reply, plus the answer-first reply template, so you help first and stay in the thread.">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
 
@@ -299,6 +299,7 @@
     </p>
     <div class="meta-row">
       <div class="meta-tag">CHECKS <span>11</span></div>
+      <div class="meta-tag">TEMPLATE <span>1</span></div>
       <div class="meta-tag">USE <span>every Reddit reply</span></div>
       <div class="meta-tag">BY <span>Carl, @StackLevels</span></div>
     </div>
@@ -328,11 +329,28 @@
   </section>
 
   <section class="prompt" style="margin-top:8px">
+    <div class="prompt-eyebrow"><span class="prompt-num">TEMPLATE</span><span class="prompt-tag">Fill it in</span></div>
+    <h2 class="prompt-title">The answer-first reply</h2>
+    <p class="prompt-why">The same order I use every time: answer their question first, mention what you built only if it truly fits, and post a link only when they ask for one.</p>
+    <div class="copy-block">
+      <button class="copy-btn" onclick="copyPrompt(this,'p0')">Copy</button>
+<pre id="p0"><span class="b">[One line that shows you read their post, in their own words]</span>
+
+<span class="b">[The full answer: the steps, the fix or the options you'd give a friend, using the details from their post]</span>
+
+<span class="b">[Only if your app truly helps this person:]</span> I built <span class="b">[app name]</span>, which <span class="b">[one line on what it does for this exact problem]</span>, so I'm biased. Happy to share it if it's useful.
+
+<span class="b">[Link only if they ask, or the room's rules allow it]</span></pre>
+    </div>
+    <p class="tip">Read it once with the app line removed. If it still helps, it's ready to post.</p>
+  </section>
+
+  <section class="prompt" style="margin-top:8px">
     <div class="prompt-eyebrow"><span class="prompt-num">PROMPT</span><span class="prompt-tag">Ask Claude</span></div>
     <h2 class="prompt-title">Draft the reply, then check it</h2>
     <p class="prompt-why">Paste the thread and the rules. Claude answers first, tells you honestly whether your app belongs in the reply, and flags anything that breaks the rules.</p>
     <div class="copy-block">
-      <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+      <button class="copy-btn" onclick="copyPrompt(this,'p1')">Copy</button>
 <pre id="p1">I want to reply to a Reddit thread without breaking the rules.
 
 Subreddit rules:
@@ -370,7 +388,7 @@ My product: <span class="b">[one line on what it does]</span>
 
 </main>
 <script>
-  function copyPrompt(btn){ var t=document.getElementById('p1').innerText; navigator.clipboard.writeText(t).then(function(){ btn.textContent='Copied'; btn.classList.add('done'); setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('done'); },1600); }); }
+  function copyPrompt(btn,id){ var t=document.getElementById(id||'p1').innerText; navigator.clipboard.writeText(t).then(function(){ btn.textContent='Copied'; btn.classList.add('done'); setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('done'); },1600); }); }
   var KEY='reply-rules-v1', boxes=[].slice.call(document.querySelectorAll('.item input'));
   function load(){ try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e) { return []; } }
   function save(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e) {} }
