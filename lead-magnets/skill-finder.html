@@ -264,6 +264,22 @@
 
   .hidden { display: none; }
 
+  .clear-row { margin-top: 18px; text-align: center; }
+  .clear-btn {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 12px 8px;
+    min-height: 44px;
+    cursor: pointer;
+  }
+  .clear-btn:hover { color: var(--accent-orange); }
+
   footer {
     margin-top: 44px;
     padding-top: 26px;
@@ -313,6 +329,7 @@
       <button class="btn" id="backBtn">Back</button>
       <button class="btn btn-primary" id="nextBtn">Next</button>
     </div>
+    <div class="clear-row"><button class="clear-btn" id="clearBtn">Clear my answers</button></div>
   </section>
 
   <!-- END SCREEN -->
@@ -333,6 +350,7 @@
     </div>
     <p class="small">Want a different angle? Change an answer and copy again.</p>
     <div class="btn-row" style="margin-top:14px"><button class="btn" id="endBackBtn">Back</button></div>
+    <div class="clear-row" style="text-align:left;margin-top:6px"><button class="clear-btn" id="endClearBtn" style="padding-left:0">Clear my answers</button></div>
 
     <div class="note"><strong>What I learned</strong>Fifty postcards used to take me three to four hours to list by hand. What turned that chore into software people pay for wasn't thirty years of code. It was knowing what a seller needs, because I'm one of them.</div>
 
@@ -384,13 +402,27 @@
       fields: [{ key: "q12", kind: "single", options: ["Still working", "Retired", "Laid off", "About to retire"] }] }
   ];
 
-  var KEY = "skill-finder-v1";
+  // Answers and position live only for this browser tab (sessionStorage):
+  // a theme switch or refresh keeps you on the same step; a new visit starts empty.
+  var KEY = "skill-finder-v2";
   var answers = {};
   var current = 0;
+  var screen = "start";
 
-  function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || "{}"); return (v && typeof v === "object") ? v : {}; } catch (e) { return {}; } }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(answers)); } catch (e) {} }
-  answers = load();
+  try { localStorage.removeItem("skill-finder-v1"); } catch (e) {}
+
+  function load() {
+    try {
+      var v = JSON.parse(sessionStorage.getItem(KEY) || "{}");
+      if (v && typeof v === "object") {
+        answers = (v.answers && typeof v.answers === "object") ? v.answers : {};
+        current = (typeof v.step === "number" && v.step >= 0 && v.step < 12) ? v.step : 0;
+        screen = (v.screen === "steps" || v.screen === "end") ? v.screen : "start";
+      }
+    } catch (e) {}
+  }
+  function save() { try { sessionStorage.setItem(KEY, JSON.stringify({ answers: answers, step: current, screen: screen })); } catch (e) {} }
+  load();
 
   var $ = function (id) { return document.getElementById(id); };
 
@@ -413,9 +445,11 @@
     try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
   }
 
-  function show(id) {
+  function show(id, noScroll) {
+    screen = id;
+    save();
     ["start", "steps", "end"].forEach(function (s) { $(s).classList.toggle("hidden", s !== id); });
-    scrollTop();
+    if (!noScroll) scrollTop();
     postResize();
   }
 
@@ -531,9 +565,17 @@
       "- Keep the whole answer under 600 words.";
   }
 
-  function showEnd() {
+  function showEnd(noScroll) {
     $("promptBox").textContent = buildPrompt();
-    show("end");
+    show("end", noScroll);
+  }
+
+  function clearAll() {
+    answers = {};
+    current = 0;
+    try { sessionStorage.removeItem(KEY); } catch (e) {}
+    show("steps");
+    renderStep();
   }
 
   function copyText(text, done) {
@@ -562,6 +604,8 @@
     if (current > 0) { current--; show("steps"); renderStep(); } else { show("start"); }
   });
   $("endBackBtn").addEventListener("click", function () { current = STEPS.length - 1; show("steps"); renderStep(); });
+  $("clearBtn").addEventListener("click", clearAll);
+  $("endClearBtn").addEventListener("click", clearAll);
   $("copyBtn").addEventListener("click", function () {
     var btn = this;
     copyText(buildPrompt(), function () {
@@ -569,6 +613,10 @@
       setTimeout(function () { btn.textContent = "Copy my prompt"; btn.classList.remove("done"); }, 2000);
     });
   });
+
+  // Restore where the viewer was (after a theme switch or refresh).
+  if (screen === "steps") { show("steps", true); renderStep(); }
+  else if (screen === "end") { showEnd(true); }
 
   postResize();
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(postResize); }
