@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Finder · Stack Levels</title>
+<meta name="description" content="Answer 12 short questions about the work you've done and the help people ask you for. Get a ready-made prompt for any AI app that tells you which of your skills someone would most likely pay for.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07090f;
+    --surface: rgba(255,255,255,0.035);
+    --surface-hover: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.10);
+    --border-accent: rgba(75,142,241,0.40);
+    --text-primary: #F0EEE8;
+    --text-secondary: rgba(240,238,232,0.74);
+    --text-muted: rgba(240,238,232,0.56);
+    --accent-blue: #4B8EF1;
+    --accent-orange: #E8824A;
+    --green: #3ecf8e;
+    --field-bg: rgba(255,255,255,0.05);
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'Lora', serif;
+  }
+  [data-theme="light"] {
+    --bg: #F5F3EE;
+    --text-primary: #0d0f14;
+    --text-secondary: rgba(13,15,20,0.74);
+    --text-muted: rgba(13,15,20,0.58);
+    --surface: rgba(0,0,0,0.03);
+    --surface-hover: rgba(0,0,0,0.055);
+    --border: rgba(0,0,0,0.12);
+    --border-accent: rgba(75,142,241,0.45);
+    --field-bg: rgba(255,255,255,0.75);
+  }
+
+  html { font-size: 18px; background: transparent; }
+
+  body {
+    background: transparent;
+    color: var(--text-primary);
+    font-family: var(--body);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  .main {
+    position: relative;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 16px 48px;
+  }
+  @media (min-width: 480px) { .main { padding: 36px 24px 60px; } }
+  @media (min-width: 768px) { .main { padding: 48px 40px 72px; } }
+
+  /* ── HEADER ── */
+  .page-brand {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent-orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .page-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .page-line {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 18px;
+  }
+  .page-line span { color: var(--accent-orange); }
+  .page-intro { color: var(--text-secondary); margin-bottom: 18px; max-width: 600px; }
+  .meta-row { display: flex; gap: 8px 18px; flex-wrap: wrap; margin-bottom: 26px; }
+  .meta-tag { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 0.06em; }
+  .meta-tag span { color: var(--text-secondary); }
+  .small {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    border-radius: 8px;
+    padding: 14px 22px;
+    min-height: 52px;
+    cursor: pointer;
+    border: 1px solid var(--border-accent);
+    background: transparent;
+    color: var(--text-primary);
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .btn:hover { background: var(--surface-hover); }
+  .btn-primary { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
+  .btn-primary:hover { background: var(--accent-blue); opacity: 0.9; }
+  .btn-primary.done { background: var(--green); border-color: var(--green); color: #07090f; }
+  .btn-row { display: flex; gap: 12px; justify-content: space-between; margin-top: 26px; }
+  .btn-row .btn { flex: 1; }
+  @media (min-width: 480px) { .btn-row .btn { flex: 0 0 auto; min-width: 150px; } }
+
+  /* ── PROGRESS ── */
+  .progress { margin-bottom: 26px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .progress-text { font-family: var(--mono); font-size: 0.74rem; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 10px; }
+  .bar { height: 6px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-blue), var(--accent-orange)); transition: width 0.25s; }
+
+  /* ── STEP ── */
+  .q-title {
+    font-family: var(--display);
+    font-size: clamp(1.35rem, 5.5vw, 1.7rem);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .q-help { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px; }
+  .field-label { display: block; font-family: var(--mono); font-size: 0.74rem; color: var(--text-secondary); letter-spacing: 0.05em; margin: 18px 0 8px; }
+  .field-label:first-child { margin-top: 0; }
+  .field {
+    width: 100%;
+    font-family: var(--body);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--field-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    min-height: 54px;
+    outline: none;
+  }
+  .field:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(75,142,241,0.18); }
+  textarea.field { min-height: 170px; resize: vertical; line-height: 1.6; }
+  .fbox + .fbox { margin-top: 20px; }
+  .two-col { display: grid; grid-template-columns: 1fr; gap: 20px 16px; }
+  .two-col .fbox + .fbox { margin-top: 0; }
+  @media (min-width: 560px) { .two-col { grid-template-columns: 1fr 1fr; } }
+
+  .group-label { font-family: var(--mono); font-size: 0.74rem; color: var(--text-secondary); letter-spacing: 0.05em; margin: 22px 0 10px; }
+  .group-label:first-child { margin-top: 0; }
+  .opts { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    text-align: left;
+    font-family: var(--body);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    min-height: 56px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .opt:hover { background: var(--surface-hover); }
+  .opt .mark {
+    width: 24px; height: 24px; flex-shrink: 0;
+    border: 1.5px solid var(--border-accent);
+    display: grid; place-content: center;
+    font-size: 15px; font-weight: 700; color: #fff;
+  }
+  .opt .mark.box { border-radius: 6px; }
+  .opt .mark.dot { border-radius: 50%; }
+  .opt.on { border-color: var(--accent-blue); background: rgba(75,142,241,0.10); }
+  .opt.on .mark { background: var(--accent-blue); border-color: var(--accent-blue); }
+  .opt.on .mark.box::after { content: '\2713'; }
+  .opt.on .mark.dot::after { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #fff; }
+
+  /* ── END SCREEN ── */
+  .prompt-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 16px;
+    margin: 6px 0 14px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+  .copy-row { margin-bottom: 26px; }
+  .copy-row .btn { width: 100%; }
+  @media (min-width: 480px) { .copy-row .btn { width: auto; min-width: 220px; } }
+
+  .howto {
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 20px 20px 18px;
+    margin-bottom: 16px;
+  }
+  .howto-title { font-family: var(--mono); font-size: 0.7rem; color: var(--accent-blue); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+  .howto ol { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 10px; }
+  .howto li { counter-increment: s; display: flex; gap: 12px; color: var(--text-secondary); font-size: 0.98rem; }
+  .howto li::before {
+    content: counter(s);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent-orange);
+    background: rgba(232,130,74,0.1);
+    border: 1px solid rgba(232,130,74,0.25);
+    border-radius: 3px;
+    padding: 1px 7px;
+    height: fit-content;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .note {
+    margin: 30px 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    border-left: 2px solid var(--accent-orange);
+    padding-left: 14px;
+  }
+  .note strong { color: var(--accent-orange); font-family: var(--mono); font-size: 0.74rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+  .bridge {
+    background: linear-gradient(135deg, rgba(75,142,241,0.12), rgba(232,130,74,0.08));
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 24px 20px;
+  }
+  .bridge h2 { font-family: var(--display); font-size: 1.3rem; font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
+  .bridge p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.98rem; }
+  .link-btn {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    background: var(--accent-blue);
+    border-radius: 8px;
+    padding: 14px 20px;
+    text-decoration: none;
+  }
+  .link-btn:hover { opacity: 0.9; }
+
+  .hidden { display: none; }
+
+  footer {
+    margin-top: 44px;
+    padding-top: 26px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .foot-name { font-family: var(--display); font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+  .foot-sub { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); letter-spacing: 0.05em; }
+  .foot-links { display: flex; flex-direction: column; gap: 5px; text-align: right; }
+  .foot-links a { font-family: var(--mono); font-size: 0.68rem; color: var(--accent-blue); text-decoration: none; letter-spacing: 0.04em; }
+  .foot-links a:hover { text-decoration: underline; }
+  @media (max-width: 520px) { .foot-links { text-align: left; } }
+</style>
+</head>
+<body>
+<main class="main" id="main">
+
+  <!-- START SCREEN -->
+  <section id="start">
+    <header>
+      <div class="page-brand">Stack Levels · nuureva.com</div>
+      <h1 class="page-title"><span style="color:var(--accent-blue)">Skill</span> Finder</h1>
+      <p class="page-line">Your experience didn't expire. <span>Only the job did.</span></p>
+      <p class="page-intro">Answer 12 short questions about the work you've done and the help people ask you for. At the end, you'll get a ready-made prompt to paste into any AI app, like ChatGPT, Claude, Gemini or Grok. It will tell you which of your skills someone would most likely pay for.</p>
+      <div class="meta-row">
+        <div class="meta-tag">QUESTIONS <span>12</span></div>
+        <div class="meta-tag">WORKS IN <span>any AI app</span></div>
+        <div class="meta-tag">BY <span>Carl, @StackLevels</span></div>
+      </div>
+    </header>
+    <button class="btn btn-primary" id="startBtn">Start</button>
+    <p class="small" style="margin-top:14px">Free. Your answers stay on your device. A few words per answer is fine.</p>
+  </section>
+
+  <!-- STEP SCREEN -->
+  <section id="steps" class="hidden">
+    <div class="progress">
+      <div class="progress-text" id="stepCount">Step 1 of 12</div>
+      <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    </div>
+    <div id="stepBody"></div>
+    <div class="btn-row">
+      <button class="btn" id="backBtn">Back</button>
+      <button class="btn btn-primary" id="nextBtn">Next</button>
+    </div>
+  </section>
+
+  <!-- END SCREEN -->
+  <section id="end" class="hidden">
+    <div class="page-brand">Stack Levels · Skill Finder</div>
+    <h1 class="page-title" style="font-size:clamp(1.7rem,7vw,2.3rem)">Your prompt is <span style="color:var(--accent-blue)">ready</span></h1>
+    <p class="page-intro">Your answers are already inside it. Nothing to fill in.</p>
+    <div class="prompt-box" id="promptBox"></div>
+    <div class="copy-row"><button class="btn btn-primary" id="copyBtn">Copy my prompt</button></div>
+
+    <div class="howto">
+      <div class="howto-title">How to use it</div>
+      <ol>
+        <li>Open the AI app you use. A free account is fine.</li>
+        <li>Paste the prompt and send it.</li>
+        <li>Read your 3 skills, and start with the one it picks.</li>
+      </ol>
+    </div>
+    <p class="small">Want a different angle? Change an answer and copy again.</p>
+    <div class="btn-row" style="margin-top:14px"><button class="btn" id="endBackBtn">Back</button></div>
+
+    <div class="note"><strong>What I learned</strong>Fifty postcards used to take me three to four hours to list by hand. What turned that chore into software people pay for wasn't thirty years of code. It was knowing what a seller needs, because I'm one of them.</div>
+
+    <div class="bridge">
+      <h2>Want to see it done for real?</h2>
+      <p>In the full video, I run the Skill Finder on myself, with my own answers.</p>
+      <a class="link-btn" href="https://youtube.com/@StackLevels" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <div class="foot-name">NUUREVA / Stack Levels</div>
+      <div class="foot-sub">Built in public · nuureva.com · @StackLevels</div>
+    </div>
+    <div class="foot-links">
+      <a href="https://nuureva.com" target="_blank" rel="noopener noreferrer">nuureva.com</a>
+      <a href="https://youtube.com/@StackLevels" target="_blank" rel="noopener noreferrer">youtube.com/@StackLevels</a>
+    </div>
+  </footer>
+
+</main>
+<script>
+(function () {
+  var STEPS = [
+    { title: "Let's start with you.", help: "Just the basics. For example: Linda, 61, school office manager, 24 years.",
+      fields: [
+        { key: "name", label: "First name", kind: "text" },
+        { key: "age", label: "Age", kind: "number" },
+        { key: "work", label: "Main line of work", kind: "text" },
+        { key: "years", label: "Years in it", kind: "number" }
+      ] },
+    { title: "At work, what were you the go-to person for?", help: "What did coworkers walk over to your desk for? For example: fixing the schedule, calming upset parents.", fields: [{ key: "q2", kind: "area" }] },
+    { title: "What do friends, family or neighbors ask you to help with?", help: "Think of the last few times someone called you for help.", fields: [{ key: "q3", kind: "area" }] },
+    { title: "What's easy for you that other people seem to find hard?", help: "If you've ever thought \"why is this so hard for them?\", write that down.", fields: [{ key: "q4", kind: "area" }] },
+    { title: "Tell one time you fixed a problem others couldn't. What happened, and what did you do?", help: "Tell it like a short story: what went wrong, and what you did.", fields: [{ key: "q5", kind: "area" }] },
+    { title: "In your field, what beginner mistake would you spot right away?", help: "The thing you'd notice in five seconds that a newcomer would miss.", fields: [{ key: "q6", kind: "area" }] },
+    { title: "What do you do with a free afternoon?", help: "Hobbies, collections, projects, anything you lose track of time doing.", fields: [{ key: "q7", kind: "area" }] },
+    { title: "Has anyone ever paid you, or offered to, for something outside your job? What was it?", help: "Even small things count: a favor someone tried to pay you for.", fields: [{ key: "q8", kind: "area" }] },
+    { title: "What do you pay other people to do for you?", help: "Lawn care, taxes, repairs, tutoring, anything you hand off to someone else.", fields: [{ key: "q9", kind: "area" }] },
+    { title: "What do you want more of now?", help: "Tick all that fit.",
+      fields: [{ key: "q10", kind: "multi", options: ["Extra income", "Flexibility", "Teaching others", "Working alone", "Working with people", "Creative work"] }] },
+    { title: "How much time can you give, and what don't you want to do?", help: "Be honest. Ideas that ignore your limits won't last.",
+      fields: [
+        { key: "q11_hours", label: "Hours a week (pick one)", kind: "single", options: ["Under 5", "5 to 10", "10 to 20", "More than 20"] },
+        { key: "q11_no", label: "Don't want (tick all that fit)", kind: "multi", options: ["Being on camera", "Selling face to face", "Keeping inventory", "Travel", "Spending money upfront"] }
+      ] },
+    { title: "Where are you right now?", help: "This helps the answer fit where you are right now.",
+      fields: [{ key: "q12", kind: "single", options: ["Still working", "Retired", "Laid off", "About to retire"] }] }
+  ];
+
+  var KEY = "skill-finder-v1";
+  var answers = {};
+  var current = 0;
+
+  function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || "{}"); return (v && typeof v === "object") ? v : {}; } catch (e) { return {}; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(answers)); } catch (e) {} }
+  answers = load();
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function postResize() {
+    try {
+      var h = Math.ceil($("main").getBoundingClientRect().height);
+      window.parent.postMessage({ type: "resource-resize", height: h }, "*");
+    } catch (e) {}
+  }
+
+  function scrollTop() {
+    try {
+      var fe = window.frameElement;
+      if (fe && window.parent) {
+        var top = fe.getBoundingClientRect().top;
+        if (top < 0) window.parent.scrollTo({ top: window.parent.scrollY + top - 90, behavior: "smooth" });
+        return;
+      }
+    } catch (e) {}
+    try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
+  }
+
+  function show(id) {
+    ["start", "steps", "end"].forEach(function (s) { $(s).classList.toggle("hidden", s !== id); });
+    scrollTop();
+    postResize();
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function renderStep() {
+    var step = STEPS[current];
+    $("stepCount").textContent = "Step " + (current + 1) + " of " + STEPS.length;
+    $("barFill").style.width = ((current + 1) / STEPS.length * 100) + "%";
+    $("nextBtn").textContent = current === STEPS.length - 1 ? "See my prompt" : "Next";
+
+    var body = $("stepBody");
+    body.innerHTML = "";
+    body.appendChild(el("h2", "q-title", step.title));
+    body.appendChild(el("p", "q-help", step.help));
+
+    var wrap = step.fields.length === 4 ? el("div", "two-col") : el("div");
+    var firstInput = null;
+
+    step.fields.forEach(function (f) {
+      var box = el("div", "fbox");
+      if (f.kind === "text" || f.kind === "number" || f.kind === "area") {
+        var id = "f_" + f.key;
+        if (f.label) { var lab = el("label", "field-label", f.label); lab.setAttribute("for", id); box.appendChild(lab); }
+        var input = f.kind === "area" ? el("textarea", "field") : el("input", "field");
+        input.id = id;
+        if (f.kind !== "area") {
+          input.type = "text";
+          if (f.kind === "number") { input.setAttribute("inputmode", "numeric"); }
+          input.setAttribute("autocomplete", "off");
+        }
+        if (!f.label) input.setAttribute("aria-label", step.title);
+        input.value = answers[f.key] || "";
+        input.addEventListener("input", function () { answers[f.key] = input.value; save(); });
+        box.appendChild(input);
+        if (!firstInput) firstInput = input;
+      } else {
+        if (f.label) box.appendChild(el("div", "group-label", f.label));
+        var opts = el("div", "opts");
+        var picked = answers[f.key];
+        if (f.kind === "multi" && !Array.isArray(picked)) picked = [];
+        f.options.forEach(function (o) {
+          var b = el("button", "opt");
+          b.type = "button";
+          var on = f.kind === "multi" ? picked.indexOf(o) > -1 : picked === o;
+          if (on) b.classList.add("on");
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+          b.appendChild(el("span", "mark " + (f.kind === "multi" ? "box" : "dot")));
+          b.appendChild(el("span", null, o));
+          b.addEventListener("click", function () {
+            if (f.kind === "multi") {
+              var arr = Array.isArray(answers[f.key]) ? answers[f.key].slice() : [];
+              var i = arr.indexOf(o);
+              if (i > -1) arr.splice(i, 1); else arr.push(o);
+              answers[f.key] = arr;
+            } else {
+              answers[f.key] = answers[f.key] === o ? "" : o;
+            }
+            save();
+            renderStep();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(opts);
+      }
+      wrap.appendChild(box);
+    });
+    body.appendChild(wrap);
+    postResize();
+    return firstInput;
+  }
+
+  function txt(k) { var v = (answers[k] || "").toString().trim(); return v ? v : "(left blank)"; }
+  function list(k) { var v = answers[k]; return (Array.isArray(v) && v.length) ? v.join(", ") : "(none ticked)"; }
+  function one(k) { var v = (answers[k] || "").toString().trim(); return v ? v : "(left blank)"; }
+
+  function buildPrompt() {
+    return "My name is " + txt("name") + ". I'm " + txt("age") + " and I spent " + txt("years") + " years working in " + txt("work") + ". I'd like to find out which of the skills I already have could become a small second income. Below are my answers to a short interview. Please don't ask me any questions. Work only from what I wrote.\n\n" +
+      "MY ANSWERS\n" +
+      "- At work, I was the go-to person for: " + txt("q2") + "\n" +
+      "- Friends, family or neighbors ask me to help with: " + txt("q3") + "\n" +
+      "- Easy for me, hard for others: " + txt("q4") + "\n" +
+      "- A time I fixed a problem others couldn't: " + txt("q5") + "\n" +
+      "- A beginner mistake I'd spot right away: " + txt("q6") + "\n" +
+      "- What I do with a free afternoon: " + txt("q7") + "\n" +
+      "- Times someone paid me, or offered to, outside my job: " + txt("q8") + "\n" +
+      "- What I pay other people to do for me: " + txt("q9") + "\n" +
+      "- What I want more of now: " + list("q10") + "\n" +
+      "- Hours a week I can give: " + one("q11_hours") + "\n" +
+      "- What I don't want to do: " + list("q11_no") + "\n" +
+      "- Where I am right now: " + one("q12") + "\n\n" +
+      "WHAT I NEED FROM YOU\n" +
+      "Give me my 3 most sellable skills, best first. For each one, use these headings:\n" +
+      "1. The skill: one line, in plain words.\n" +
+      "2. Why you picked it: point to my own answers above.\n" +
+      "3. Who would pay: describe a specific kind of person or business, not \"anyone\".\n" +
+      "4. A small first offer: one simple thing I could sell, that fits my hours and avoids everything on my \"don't want\" list.\n" +
+      "5. What AI could do for me: the slow or tedious parts AI could handle.\n" +
+      "6. A free first test: one way to check with a few real people whether they'd pay, before I spend any money. Base it on asking about their past experience, not \"would you buy this?\"\n" +
+      "7. Watch out for: the main reason this might not work.\n\n" +
+      "Then finish with one line: \"If I were you, I'd start with ___ because ___.\"\n\n" +
+      "RULES\n" +
+      "- Don't ask me any questions. If an answer above is blank or unclear, work with what's there and say what you assumed.\n" +
+      "- Use plain, friendly words, like a friend over coffee. No jargon, no hype.\n" +
+      "- Be honest. If an idea is weak, say so.\n" +
+      "- Don't promise income, earnings or results, and don't guess prices. If you mention a price, say whether you looked it up or are estimating.\n" +
+      "- Don't suggest anything that needs a big upfront cost or skills I didn't mention.\n" +
+      "- Keep the whole answer under 600 words.";
+  }
+
+  function showEnd() {
+    $("promptBox").textContent = buildPrompt();
+    show("end");
+  }
+
+  function copyText(text, done) {
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        done();
+      } catch (e) {}
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+    } catch (e) { fallback(); }
+  }
+
+  $("startBtn").addEventListener("click", function () { current = 0; show("steps"); var f = renderStep(); });
+  $("nextBtn").addEventListener("click", function () {
+    if (current < STEPS.length - 1) { current++; show("steps"); renderStep(); } else { showEnd(); }
+  });
+  $("backBtn").addEventListener("click", function () {
+    if (current > 0) { current--; show("steps"); renderStep(); } else { show("start"); }
+  });
+  $("endBackBtn").addEventListener("click", function () { current = STEPS.length - 1; show("steps"); renderStep(); });
+  $("copyBtn").addEventListener("click", function () {
+    var btn = this;
+    copyText(buildPrompt(), function () {
+      btn.textContent = "Copied!"; btn.classList.add("done");
+      setTimeout(function () { btn.textContent = "Copy my prompt"; btn.classList.remove("done"); }, 2000);
+    });
+  });
+
+  postResize();
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(postResize); }
+  window.addEventListener("load", postResize);
+  window.addEventListener("resize", postResize);
+})();
+</script>
+</body>
+</html>
