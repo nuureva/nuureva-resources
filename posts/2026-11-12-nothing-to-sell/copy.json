@@ -1,0 +1,28 @@
+{
+ "fields": {
+  "cover_headline": "Nothing to sell?\n{o:3 questions} say otherwise.",
+  "step1_label": "THE REASON",
+  "step1_heading": "Your best skill feels {o:too normal}",
+  "step1_body": "You've done it so long it feels like nothing.\nSo you don't see it. Other people do.\nThese 3 questions come from my free Skill Finder.\nThe first one is the easiest.",
+  "step2_label": "QUESTION 01 / 03",
+  "step2_heading": "What were you the {b:go-to} for?",
+  "step2_body": "What did coworkers walk over to your desk for?\nFixing the schedule? Calming upset clients?\nWrite down every one, even the small ones.\nThen look outside work.",
+  "step3_label": "QUESTION 02 / 03",
+  "step3_heading": "Easy for you, {b:hard} for others?",
+  "step3_body": "Ever thought \"why is this so hard for them?\"\nThat thought is a price tag in disguise.\nPeople pay for what feels hard to them.\nBut the last question is the real test.",
+  "step4_label": "QUESTION 03 / 03",
+  "step4_heading": "Has anyone asked what you {o:charge}?",
+  "step4_body": "A favor someone offered money for.\nA neighbor who said \"let me pay you.\"\nThat's someone telling you the price.\nAnswer all 12 and AI ranks your top 3.",
+  "cta_headline": "You had something {o:all along}.",
+  "cta_subtext": "Comment {o:SKILLS} and I'll DM you my free Skill Finder: 12 questions, then AI names your 3 most sellable skills.",
+  "cta_button": "Follow @stacklevels"
+ },
+ "order": [
+  "cover",
+  "step1",
+  "step2",
+  "step3",
+  "step4",
+  "cta"
+ ]
+}

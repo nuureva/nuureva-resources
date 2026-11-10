@@ -1,0 +1,28 @@
+{
+ "fields": {
+  "cover_headline": "Replaced by AI.\nThen asked to {o:come back}.",
+  "step1_label": "THE REASON",
+  "step1_heading": "AI didn't know what {o:you} know.",
+  "step1_body": "32% of US hiring managers say they brought back\nroles they'd cut for AI.\nTop reason: knowledge AI couldn't replace.\nThe free Skill Finder shows what yours is worth.",
+  "step2_label": "STEP 01 / 03",
+  "step2_heading": "Write down what people {b:asked} you",
+  "step2_body": "Who walked over to your desk, and for what?\nList five things people asked you to fix.\nThose are problems you already solve.\nBut which one would someone pay for?",
+  "step3_label": "STEP 02 / 03",
+  "step3_heading": "Find who pays for it {b:outside} a job",
+  "step3_body": "Small businesses. People just starting out.\nThe person you were 20 years ago.\nAsk ChatGPT: who pays to fix this, and how?\nThen check it with real people first.",
+  "step4_label": "STEP 03 / 03",
+  "step4_heading": "Test it before you {o:spend} a dollar",
+  "step4_body": "Ask three people about the last time\nthey had this problem. What did they do?\nWhat did it cost them?\nTheir answers tell you if it can pay you.",
+  "cta_headline": "Your know-how didn't {o:expire}.",
+  "cta_subtext": "Comment {o:SKILLS} and I'll DM you my free Skill Finder: 12 questions, then AI names your 3 most sellable skills.",
+  "cta_button": "Follow @stacklevels"
+ },
+ "order": [
+  "cover",
+  "step1",
+  "step2",
+  "step3",
+  "step4",
+  "cta"
+ ]
+}

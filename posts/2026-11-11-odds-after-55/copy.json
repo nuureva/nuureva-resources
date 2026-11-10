@@ -1,0 +1,28 @@
+{
+ "fields": {
+  "cover_headline": "Laid off after 55?\nThe {o:odds} aren't the same.",
+  "step1_label": "THE NUMBERS",
+  "step1_heading": "Same layoff. {o:Different} odds.",
+  "step1_body": "Laid off at 25 to 54: 73% are working again.\nLaid off at 55 to 64: 57%.\nThat gap is why a backup plan can't wait.\nThe free Skill Finder is where yours starts.",
+  "step2_label": "THEN",
+  "step2_heading": "One job until the {b:gold watch}",
+  "step2_body": "Then: one company, one paycheck, one plan.\nYour skills belonged to your job title.\nNow the title can disappear overnight.\nBut the skills don't go with it.",
+  "step3_label": "NOW",
+  "step3_heading": "A {b:second} income, built early",
+  "step3_body": "Now: you start something small while you work.\nOne skill, one buyer, one test.\nAI does the slow parts: drafts, research, setup.\nSo which skill do you start with?",
+  "step4_label": "THE FIRST MOVE",
+  "step4_heading": "Start with what people {o:ask} you",
+  "step4_body": "Not a hobby. Not a trend.\nThe thing coworkers and friends ask you for.\nIt's already proven: people want it.\nThe Skill Finder turns it into your first offer.",
+  "cta_headline": "Start before you {o:need} it.",
+  "cta_subtext": "Comment {o:SKILLS} and I'll DM you my free Skill Finder: 12 questions, then AI names your 3 most sellable skills.",
+  "cta_button": "Follow @stacklevels"
+ },
+ "order": [
+  "cover",
+  "step1",
+  "step2",
+  "step3",
+  "step4",
+  "cta"
+ ]
+}
