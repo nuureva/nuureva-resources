@@ -1,0 +1,29 @@
+{
+ "fields": {
+  "cover_label": " ",
+  "cover_headline": "Over 45 with {o:no plan B}?",
+  "step1_label": "THE NUMBERS",
+  "step1_heading": "The young ones\n{o:already} started",
+  "step1_body": "35% of US workers have a side income.\nYounger workers: nearly twice as likely.\nThey didn't start smarter. They started.\nThe free Skill Finder is where you start.",
+  "step2_label": "STEP 01 / 03",
+  "step2_heading": "Use the {b:years}\nthey don't have",
+  "step2_body": "You've watched the same problems for decades.\nYou know which fixes last and which don't.\nYounger workers can't fake that.\nBut you have to pick one to sell.",
+  "step3_label": "STEP 02 / 03",
+  "step3_heading": "Pick {b:one} problem",
+  "step3_body": "The one people at work brought to you.\nThe one you could fix half asleep.\nAsk Claude who pays to have it fixed.\nThen make it small enough to test.",
+  "step4_label": "STEP 03 / 03",
+  "step4_heading": "Start {o:small}\nwhile you're paid",
+  "step4_body": "Keep the job. Test it on a weeknight.\nOne offer, one buyer, one conversation.\nClaude drafts. You decide.\nLate is fine. Never is the problem.",
+  "cta_headline": "You're not late. You're {o:ready}.",
+  "cta_subtext": "Comment {o:SKILLS} and I'll DM you my free Skill Finder: 12 questions, then AI names your 3 most sellable skills.",
+  "cta_button": "Follow @stacklevels"
+ },
+ "order": [
+  "cover",
+  "step1",
+  "step2",
+  "step3",
+  "step4",
+  "cta"
+ ]
+}

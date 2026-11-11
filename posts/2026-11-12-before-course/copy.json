@@ -1,0 +1,29 @@
+{
+ "fields": {
+  "cover_label": " ",
+  "cover_headline": "Before you buy a side hustle {o:course}, read this.",
+  "step1_label": "THE REASON",
+  "step1_heading": "It teaches {o:their}\nside hustle",
+  "step1_body": "A course teaches the seller's side hustle.\nNot yours. Your skills are different.\nSo start with what you already know.\nThe free Skill Finder asks the right questions.",
+  "step2_label": "CHECK 01 / 03",
+  "step2_heading": "Does it start with\n{b:your} skills?",
+  "step2_body": "Or does it hand you a ready-made business?\nIf it never asks what you know, skip it.\nYour years of work are the starting point.\nNext, check who's earning from it.",
+  "step3_label": "CHECK 02 / 03",
+  "step3_heading": "Who's {b:actually}\nearning from it?",
+  "step3_body": "Look for students who earn from it now.\nNot the seller's income screenshots.\nNo real students to point to? Walk away.\nThe last check costs you nothing.",
+  "step4_label": "CHECK 03 / 03",
+  "step4_heading": "Can you test it\nfor {o:$0} first?",
+  "step4_body": "Ask Claude: how could I test this for free?\nOne post. One conversation. One small offer.\nIf it can't be tested for free, wait.\nYour first test doesn't need a course.",
+  "cta_headline": "Your skills\ncome {o:first}.",
+  "cta_subtext": "Comment {o:SKILLS} and I'll DM you my free Skill Finder: 12 questions, then AI names your 3 most sellable skills.",
+  "cta_button": "Follow @stacklevels"
+ },
+ "order": [
+  "cover",
+  "step1",
+  "step2",
+  "step3",
+  "step4",
+  "cta"
+ ]
+}

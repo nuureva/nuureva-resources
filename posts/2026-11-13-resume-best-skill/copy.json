@@ -1,0 +1,29 @@
+{
+ "fields": {
+  "cover_label": " ",
+  "cover_headline": "Your résumé hides your {o:best} skill.",
+  "step1_label": "THE REASON",
+  "step1_heading": "Titles list {o:duties}, not value",
+  "step1_body": "\"Managed accounts\" doesn't say what you fixed.\nBuyers pay for the fix, not the title.\nSo translate your résumé, line by line.\nThe free Skill Finder does the first pass.",
+  "step2_label": "STEP 01 / 03",
+  "step2_heading": "Pick one line\nfrom your {b:résumé}",
+  "step2_body": "Choose the duty you did for years.\nAsk: what went wrong when I was out?\nThat's the problem you solved.\nNow find who else has it.",
+  "step3_label": "STEP 02 / 03",
+  "step3_heading": "Name who has\nthe {b:problem}",
+  "step3_body": "Not your old employer. Smaller places.\nA shop, a clinic, a brand-new manager.\nAsk Claude who else fights this problem.\nThen pick the buyer you understand best.",
+  "step4_label": "STEP 03 / 03",
+  "step4_heading": "Rewrite it as an {o:offer}",
+  "step4_body": "\"I help [who] fix [problem].\"\nOne sentence. No title, no jargon.\nRead it to a friend and watch their face.\n\"I know someone\" means you're close.",
+  "cta_headline": "Same skills.\nNew {o:words}.",
+  "cta_subtext": "Comment {o:SKILLS} and I'll DM you my free Skill Finder: 12 questions, then AI names your 3 most sellable skills.",
+  "cta_button": "Follow @stacklevels"
+ },
+ "order": [
+  "cover",
+  "step1",
+  "step2",
+  "step3",
+  "step4",
+  "cta"
+ ]
+}

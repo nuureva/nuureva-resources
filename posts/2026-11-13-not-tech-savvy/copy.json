@@ -1,0 +1,29 @@
+{
+ "fields": {
+  "cover_label": " ",
+  "cover_headline": "Over 50 and called\n{o:“not tech-savvy”}?",
+  "step1_label": "THE NUMBERS",
+  "step1_heading": "You're not the only {o:one}",
+  "step1_body": "AARP asked 1,656 workers over 50.\nA third had seen one bias: \"less tech-savvy.\"\nArguing won't change that. Using AI will.\nThe free Skill Finder shows where to start.",
+  "step2_label": "STEP 01 / 03",
+  "step2_heading": "Pick the skill they\n{b:can't} replace",
+  "step2_body": "Not the software you used. The judgment.\nThe calls juniors came to you to make.\nWrite three of them down.\nThen hand one to Claude.",
+  "step3_label": "STEP 02 / 03",
+  "step3_heading": "Let AI do the {b:tech} part",
+  "step3_body": "Ask Claude to turn it into a one-page offer.\nIt writes the draft. You fix what's wrong.\nYou spot what's wrong because you've done it.\nNow show it to one real person.",
+  "step4_label": "STEP 03 / 03",
+  "step4_heading": "Show it to {o:one} person",
+  "step4_body": "A former coworker. A local business owner.\nAsk: would this help you? What would you pay?\nOne yes from a real person is a real start.\nAnd a working offer never checks your age.",
+  "cta_headline": "Tech-savvy {o:enough}.",
+  "cta_subtext": "Comment {o:SKILLS} and I'll DM you my free Skill Finder: 12 questions, then AI names your 3 most sellable skills.",
+  "cta_button": "Follow @stacklevels"
+ },
+ "order": [
+  "cover",
+  "step1",
+  "step2",
+  "step3",
+  "step4",
+  "cta"
+ ]
+}
